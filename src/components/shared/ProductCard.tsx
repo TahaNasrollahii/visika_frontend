@@ -1,0 +1,96 @@
+"use client"
+
+import React from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { Plus, Heart, ShoppingCart } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+
+export interface Product {
+  id: string
+  title: string
+  price: number
+  discountPrice?: number
+  image: string
+  badge?: string
+}
+
+interface ProductCardProps {
+  product: Product
+}
+
+export function ProductCard({ product }: ProductCardProps) {
+  const hasDiscount = product.discountPrice && product.discountPrice < product.price
+  const discountPercent = hasDiscount
+    ? Math.round(((product.price - product.discountPrice!) / product.price) * 100)
+    : 0
+
+  return (
+    <Card className="group relative overflow-hidden h-full flex flex-col border-muted hover:border-primary/50 transition-all duration-300">
+      {/* Badges */}
+      <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
+        {hasDiscount && (
+          <Badge variant="destructive" className="font-bold">
+            {discountPercent}٪ تخفیف
+          </Badge>
+        )}
+        {product.badge && (
+          <Badge variant="default" className="bg-blue-500 hover:bg-blue-600">
+            {product.badge}
+          </Badge>
+        )}
+      </div>
+
+      <button 
+        onClick={() => toast.success('به لیست علاقه‌مندی‌ها اضافه شد')}
+        className="absolute top-3 left-3 z-10 w-8 h-8 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-background transition-colors shadow-sm opacity-0 group-hover:opacity-100"
+      >
+        <Heart className="w-4 h-4" />
+      </button>
+
+      {/* Image */}
+      <Link href={`/product/${product.id}`} className="relative aspect-square p-4 flex items-center justify-center bg-white">
+        <div className="relative w-full h-full rounded-xl overflow-hidden">
+          <Image 
+            src={product.image} 
+            alt={product.title} 
+            fill 
+            className="object-contain hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
+      </Link>
+
+      <CardContent className="flex flex-col flex-1 p-4 gap-2">
+        <Link href={`/product/${product.id}`} className="font-medium text-sm leading-tight line-clamp-2 hover:text-primary transition-colors flex-1">
+          {product.title}
+        </Link>
+        
+        <div className="flex items-end justify-between mt-2">
+          <div className="flex flex-col">
+            {hasDiscount && (
+              <span className="text-xs text-muted-foreground line-through decoration-destructive/50">
+                {product.price.toLocaleString("fa-IR")} تومان
+              </span>
+            )}
+            <span className="font-bold text-lg text-foreground flex items-center gap-1">
+              {(product.discountPrice || product.price).toLocaleString("fa-IR")}
+              <span className="text-[10px] font-normal text-muted-foreground">تومان</span>
+            </span>
+          </div>
+          
+          <Button 
+            onClick={() => toast.success('محصول به سبد خرید اضافه شد')}
+            size="icon" 
+            className="h-9 w-9 rounded-full shadow-sm"
+          >
+            <Plus className="w-5 h-5" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
