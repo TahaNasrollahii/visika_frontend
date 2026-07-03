@@ -1,11 +1,18 @@
-import React from "react"
+"use client"
+
+import React, { useState } from "react"
 import Link from "next/link"
 import { MapPin, Clock, CreditCard, ChevronLeft, ShieldCheck, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function CheckoutPage() {
+  const [selectedTime, setSelectedTime] = useState(0)
+  const [selectedPayment, setSelectedPayment] = useState('online')
+
   const finalPrice = 111000 // mock price
   const shippingCost = 25000
+
+  const deliveryTimes = ['امروز - ۱۸ تا ۲۰', 'امروز - ۲۰ تا ۲۲', 'فردا - ۱۰ تا ۱۲']
 
   return (
     <div className="container mx-auto px-4 py-8 lg:px-8">
@@ -44,15 +51,19 @@ export default function CheckoutPage() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {['امروز - ۱۸ تا ۲۰', 'امروز - ۲۰ تا ۲۲', 'فردا - ۱۰ تا ۱۲'].map((time, i) => (
-                <label key={i} className={`flex items-center justify-center p-4 border-2 rounded-2xl cursor-pointer transition-all ${i === 0 ? 'border-primary bg-primary/5 shadow-sm' : 'border-muted hover:border-primary/50'}`}>
+              {deliveryTimes.map((time, i) => (
+                <div 
+                  key={i} 
+                  onClick={() => setSelectedTime(i)}
+                  className={`flex items-center justify-center p-4 border-2 rounded-2xl cursor-pointer transition-all ${selectedTime === i ? 'border-primary bg-primary/5 shadow-sm' : 'border-muted hover:border-primary/50'}`}
+                >
                   <div className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${i === 0 ? 'border-primary' : 'border-muted-foreground'}`}>
-                      {i === 0 && <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>}
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedTime === i ? 'border-primary' : 'border-muted-foreground'}`}>
+                      {selectedTime === i && <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>}
                     </div>
-                    <span className={`font-medium ${i === 0 ? 'text-primary' : 'text-foreground'}`}>{time}</span>
+                    <span className={`font-medium ${selectedTime === i ? 'text-primary' : 'text-foreground'}`}>{time}</span>
                   </div>
-                </label>
+                </div>
               ))}
             </div>
           </div>
@@ -67,27 +78,35 @@ export default function CheckoutPage() {
             </div>
             
             <div className="space-y-4">
-              <label className="flex items-center p-4 border-2 border-primary bg-primary/5 rounded-2xl cursor-pointer shadow-sm">
+              <div 
+                onClick={() => setSelectedPayment('online')}
+                className={`flex items-center p-4 border-2 rounded-2xl cursor-pointer transition-all ${selectedPayment === 'online' ? 'border-primary bg-primary/5 shadow-sm' : 'border-muted hover:border-primary/50'}`}
+              >
                 <div className="flex items-center gap-4">
-                  <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
-                    <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment === 'online' ? 'border-primary' : 'border-muted-foreground'}`}>
+                    {selectedPayment === 'online' && <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>}
                   </div>
                   <div>
-                    <span className="font-bold block">پرداخت اینترنتی</span>
+                    <span className={`font-bold block ${selectedPayment === 'online' ? 'text-primary' : 'text-foreground'}`}>پرداخت اینترنتی</span>
                     <span className="text-sm text-muted-foreground">پرداخت آنلاین با تمامی کارت‌های بانکی</span>
                   </div>
                 </div>
-              </label>
+              </div>
               
-              <label className="flex items-center p-4 border-2 border-muted rounded-2xl cursor-pointer hover:border-primary/50 transition-colors">
-                <div className="flex items-center gap-4 opacity-70">
-                  <div className="w-5 h-5 rounded-full border-2 border-muted-foreground"></div>
+              <div 
+                onClick={() => setSelectedPayment('cod')}
+                className={`flex items-center p-4 border-2 rounded-2xl cursor-pointer transition-all ${selectedPayment === 'cod' ? 'border-primary bg-primary/5 shadow-sm' : 'border-muted hover:border-primary/50'}`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment === 'cod' ? 'border-primary' : 'border-muted-foreground'}`}>
+                    {selectedPayment === 'cod' && <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>}
+                  </div>
                   <div>
-                    <span className="font-bold block">پرداخت در محل</span>
-                    <span className="text-sm text-muted-foreground">با دستگاه کارتخوان (فعلاً غیرفعال)</span>
+                    <span className={`font-bold block ${selectedPayment === 'cod' ? 'text-primary' : 'text-foreground'}`}>پرداخت در محل</span>
+                    <span className="text-sm text-muted-foreground">با دستگاه کارتخوان</span>
                   </div>
                 </div>
-              </label>
+              </div>
             </div>
           </div>
 

@@ -43,7 +43,7 @@ export default function CartPage() {
             <div className="flex items-center gap-3">
               <ShoppingCart className="text-primary w-6 h-6" />
               <div>
-                <h2 className="font-bold">سبد خرید وزیکا</h2>
+                <h2 className="font-bold">سبد خرید ویزیکا</h2>
                 <p className="text-sm text-muted-foreground mt-1">{cartItems.length} کالا</p>
               </div>
             </div>

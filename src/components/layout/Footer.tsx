@@ -15,11 +15,11 @@ export function Footer() {
                 V
               </div>
               <span className="font-bold text-2xl tracking-tight text-primary">
-                وزیکا
+                ویزیکا
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              وزیکا، سوپرمارکت آنلاین شما برای خریدی آسان، سریع و مطمئن. ما بهترین و تازه‌ترین محصولات را با کمترین زمان به دست شما می‌رسانیم تا تجربه‌ای متفاوت از خرید روزانه داشته باشید.
+              ویزیکا، سوپرمارکت آنلاین شما برای خریدی آسان، سریع و مطمئن. ما بهترین و تازه‌ترین محصولات را با کمترین زمان به دست شما می‌رسانیم تا تجربه‌ای متفاوت از خرید روزانه داشته باشید.
             </p>
             <div className="flex items-center gap-4 pt-2">
               <Link href="#" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
@@ -35,7 +35,7 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-6">دسترسی سریع</h3>
             <ul className="space-y-3">
-              <li><Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">درباره وزیکا</Link></li>
+              <li><Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">درباره ویزیکا</Link></li>
               <li><Link href="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">تماس با ما</Link></li>
               <li><Link href="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">سوالات متداول</Link></li>
               <li><Link href="/rules" className="text-sm text-muted-foreground hover:text-primary transition-colors">قوانین و مقررات</Link></li>
@@ -76,7 +76,7 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t gap-4">
           <p className="text-xs text-muted-foreground text-center md:text-right">
-            کلیه حقوق این وب‌سایت متعلق به فروشگاه آنلاین وزیکا می‌باشد. © ۱۴۰۳
+            کلیه حقوق این وب‌سایت متعلق به فروشگاه آنلاین ویزیکا می‌باشد. © ۱۴۰۳
           </p>
           <div className="flex gap-2">
             {/* Trust Badges Placeholders */}

@@ -28,7 +28,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
               👤
             </div>
             <div>
-              <h2 className="font-bold text-lg">کاربر وزیکا</h2>
+              <h2 className="font-bold text-lg">کاربر ویزیکا</h2>
               <p className="text-sm text-muted-foreground mt-1">۰۹۱۲۳۴۵۶۷۸۹</p>
             </div>
           </div>

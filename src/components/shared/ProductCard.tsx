@@ -23,10 +23,24 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const [isFavorite, setIsFavorite] = React.useState(false)
+
   const hasDiscount = product.discountPrice && product.discountPrice < product.price
   const discountPercent = hasDiscount
     ? Math.round(((product.price - product.discountPrice!) / product.price) * 100)
     : 0
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (isFavorite) {
+      setIsFavorite(false)
+      toast.info('از لیست علاقه‌مندی‌ها حذف شد')
+    } else {
+      setIsFavorite(true)
+      toast.success('به لیست علاقه‌مندی‌ها اضافه شد')
+    }
+  }
 
   return (
     <Card className="group relative overflow-hidden h-full flex flex-col border-muted hover:border-primary/50 transition-all duration-300">
@@ -45,10 +59,10 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       <button 
-        onClick={() => toast.success('به لیست علاقه‌مندی‌ها اضافه شد')}
-        className="absolute top-3 left-3 z-10 w-8 h-8 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-background transition-colors shadow-sm opacity-0 group-hover:opacity-100"
+        onClick={toggleFavorite}
+        className={`absolute top-3 left-3 z-10 w-8 h-8 bg-background/80 backdrop-blur-md rounded-full flex items-center justify-center transition-colors shadow-sm ${isFavorite ? 'text-destructive opacity-100' : 'text-muted-foreground hover:text-destructive hover:bg-background opacity-0 group-hover:opacity-100'}`}
       >
-        <Heart className="w-4 h-4" />
+        <Heart className={`w-4 h-4 ${isFavorite ? 'fill-destructive' : ''}`} />
       </button>
 
       {/* Image */}

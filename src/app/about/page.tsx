@@ -8,9 +8,9 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto space-y-12">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-primary">درباره وزیکا</h1>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-primary">درباره ویزیکا</h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            وزیکا، نسل جدید سوپرمارکت‌های آنلاین، با هدف ارائه بهترین کیفیت و سریع‌ترین خدمات ارسال طراحی شده است.
+            ویزیکا، نسل جدید سوپرمارکت‌های آنلاین، با هدف ارائه بهترین کیفیت و سریع‌ترین خدمات ارسال طراحی شده است.
           </p>
         </div>
 

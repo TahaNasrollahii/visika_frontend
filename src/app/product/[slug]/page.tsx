@@ -119,7 +119,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                     <Store className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold">فروشگاه وزیکا</p>
+                    <p className="text-sm font-bold">فروشگاه ویزیکا</p>
                     <p className="text-xs text-green-600 font-medium mt-1">عملکرد: عالی</p>
                   </div>
                 </div>

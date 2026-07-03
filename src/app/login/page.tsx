@@ -10,6 +10,8 @@ export default function LoginPage() {
   const [step, setStep] = useState<1 | 2>(1)
   const [phone, setPhone] = useState("")
 
+  const [otp, setOtp] = useState("")
+
   const handleSendOTP = (e: React.FormEvent) => {
     e.preventDefault()
     if (phone.length === 11) {
@@ -19,8 +21,10 @@ export default function LoginPage() {
 
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock login success, redirect
-    window.location.href = "/"
+    if (otp.length === 5) {
+      // Navigate directly to profile
+      window.location.href = "/profile"
+    }
   }
 
   return (
@@ -61,7 +65,7 @@ export default function LoginPage() {
               ارسال کد تایید
             </Button>
             <p className="text-xs text-center text-muted-foreground leading-relaxed mt-4">
-              ورود شما به معنای پذیرش <Link href="#" className="text-primary underline">شرایط و قوانین</Link> وزیکا است.
+              ورود شما به معنای پذیرش <Link href="#" className="text-primary underline">شرایط و قوانین</Link> ویزیکا است.
             </p>
           </form>
         )}
@@ -76,6 +80,8 @@ export default function LoginPage() {
                   type="text" 
                   className="text-center text-2xl tracking-[1em] h-14 font-bold"
                   maxLength={5}
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
                   autoFocus
                 />
               </div>

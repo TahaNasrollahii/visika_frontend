@@ -9,7 +9,7 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "Vzika | فروشگاه اینترنتی وزیکا",
+  title: "Vizika | فروشگاه اینترنتی ویزیکا",
   description: "سوپرمارکت آنلاین با محصولات تازه و ارسال سریع",
 };
 

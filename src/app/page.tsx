@@ -3,31 +3,13 @@ import { ChevronLeft } from "lucide-react"
 import { ProductCard } from "@/components/shared/ProductCard"
 import { bestSellers, hotOffers, categories } from "@/lib/data"
 import { Button } from "@/components/ui/button"
+import { Hero } from "@/components/home/Hero"
 
 export default function Home() {
   return (
     <div className="flex flex-col gap-12 pb-12">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 lg:px-8 pt-6">
-        <div className="w-full h-[300px] md:h-[400px] lg:h-[450px] rounded-3xl bg-gradient-to-r from-primary to-blue-400 relative overflow-hidden flex items-center shadow-lg">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative z-10 px-8 md:px-16 max-w-2xl text-white space-y-6">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-              خرید تازه، <br /> تحویل سریع
-            </h1>
-            <p className="text-lg md:text-xl text-blue-50 max-w-md leading-relaxed">
-              هر آنچه برای خانه نیاز دارید، با بهترین قیمت و کیفیت در کمتر از یک ساعت درب منزل شماست.
-            </p>
-            <div className="pt-4">
-              <Link href="/categories">
-                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-bold rounded-full px-8 text-base shadow-md">
-                  شروع خرید
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* Categories Grid */}
       <section className="container mx-auto px-4 lg:px-8">
@@ -80,7 +62,7 @@ export default function Home() {
             <div className="w-1.5 h-8 bg-primary rounded-full"></div>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">پرفروش‌ترین کالاها</h2>
           </div>
-          <Link href="/best-sellers" className="text-primary font-medium flex items-center hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors">
+          <Link href="/best-selling" className="text-primary font-medium flex items-center hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors">
             مشاهده همه
             <ChevronLeft className="w-5 h-5" />
           </Link>
