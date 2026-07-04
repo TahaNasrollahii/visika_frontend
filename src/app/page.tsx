@@ -84,20 +84,39 @@ export default function Home() {
 
       {/* Banners Section */}
       <section className="container mx-auto px-4 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="rounded-3xl bg-secondary h-48 md:h-64 flex items-center justify-between px-8 md:px-12 relative overflow-hidden group cursor-pointer hover:shadow-lg transition-all">
-            <div className="space-y-3 z-10">
-              <h3 className="text-2xl font-bold">خرید محصولات <br/> پروتئینی تازه</h3>
-              <p className="text-muted-foreground">با تضمین کیفیت و بهداشت</p>
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+          {/* Banner 1: Protein */}
+          <div className="group relative h-32 md:h-40 rounded-3xl overflow-hidden cursor-pointer bg-gradient-to-br from-rose-50 to-red-100 border border-red-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-between px-6 md:px-10">
+            {/* Background Decorations */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-200/50 rounded-full blur-2xl group-hover:bg-red-300/50 transition-colors duration-500"></div>
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-rose-200/50 rounded-full blur-2xl group-hover:bg-rose-300/50 transition-colors duration-500"></div>
+            
+            <div className="space-y-1.5 md:space-y-2 z-10">
+              <h3 className="text-lg md:text-xl font-extrabold text-red-950">خرید محصولات <br className="hidden sm:block"/> پروتئینی تازه</h3>
+              <p className="text-xs md:text-sm font-medium text-red-800/80">با تضمین کیفیت و بهداشت</p>
             </div>
-            <div className="text-7xl group-hover:scale-110 transition-transform duration-500">🥩</div>
+            
+            <div className="relative z-10">
+              <div className="absolute inset-0 bg-white/40 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="text-5xl md:text-6xl drop-shadow-md group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 ease-out">🥩</div>
+            </div>
           </div>
-          <div className="rounded-3xl bg-orange-100 h-48 md:h-64 flex items-center justify-between px-8 md:px-12 relative overflow-hidden group cursor-pointer hover:shadow-lg transition-all">
-            <div className="space-y-3 z-10">
-              <h3 className="text-2xl font-bold text-orange-900">نوشیدنی‌های <br/> خنک تابستانی</h3>
-              <p className="text-orange-700">تا ۲۰٪ تخفیف</p>
+
+          {/* Banner 2: Summer Drinks */}
+          <div className="group relative h-32 md:h-40 rounded-3xl overflow-hidden cursor-pointer bg-gradient-to-br from-orange-50 to-amber-100 border border-amber-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-between px-6 md:px-10">
+            {/* Background Decorations */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-200/50 rounded-full blur-2xl group-hover:bg-orange-300/50 transition-colors duration-500"></div>
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-amber-200/50 rounded-full blur-2xl group-hover:bg-amber-300/50 transition-colors duration-500"></div>
+            
+            <div className="space-y-1.5 md:space-y-2 z-10">
+              <h3 className="text-lg md:text-xl font-extrabold text-orange-950">نوشیدنی‌های <br className="hidden sm:block"/> خنک تابستانی</h3>
+              <p className="text-xs md:text-sm font-bold text-orange-600 bg-orange-100/50 w-fit px-2 py-0.5 rounded-md">تا ۲۰٪ تخفیف</p>
             </div>
-            <div className="text-7xl group-hover:scale-110 transition-transform duration-500">🍹</div>
+            
+            <div className="relative z-10">
+              <div className="absolute inset-0 bg-white/40 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="text-5xl md:text-6xl drop-shadow-md group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 ease-out">🍹</div>
+            </div>
           </div>
         </div>
       </section>
