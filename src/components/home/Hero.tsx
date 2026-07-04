@@ -24,7 +24,7 @@ export function Hero() {
 
   return (
     <section className="container mx-auto px-4 lg:px-8 pt-6">
-      <div className="w-full h-[360px] md:h-[450px] lg:h-[500px] rounded-[2.5rem] bg-gradient-to-br from-primary via-blue-500 to-indigo-600 relative overflow-hidden flex items-center justify-center md:justify-start shadow-2xl shadow-primary/20">
+      <div className="w-full h-[360px] md:h-[400px] lg:h-[440px] rounded-[2.5rem] bg-gradient-to-br from-primary via-blue-500 to-indigo-600 relative overflow-hidden flex items-center justify-center md:justify-start shadow-2xl shadow-primary/20">
 
         {/* Animated Background Elements */}
         <motion.div
