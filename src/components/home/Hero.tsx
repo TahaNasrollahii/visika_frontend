@@ -24,41 +24,62 @@ export function Hero() {
 
   return (
     <section className="container mx-auto px-4 lg:px-8 pt-6">
-      <div className="w-full h-[360px] md:h-[400px] lg:h-[440px] rounded-[2.5rem] bg-gradient-to-br from-primary via-blue-500 to-indigo-600 relative overflow-hidden flex items-center justify-center md:justify-start shadow-2xl shadow-primary/20">
+      <div className="w-full h-[380px] md:h-[420px] lg:h-[480px] rounded-[2.5rem] bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-[length:200%_auto] animate-[gradient-x_8s_linear_infinite] relative overflow-hidden flex items-center justify-center md:justify-start shadow-2xl shadow-blue-500/30">
 
         {/* Animated Background Elements */}
         <motion.div
           animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"
+          className="absolute -top-32 -right-32 w-96 h-96 bg-white/20 rounded-full blur-[100px] pointer-events-none"
         />
         <motion.div
           animate={{ scale: [1, 1.5, 1], rotate: [0, -90, 0] }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"
+          className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-[100px] pointer-events-none"
         />
 
-        {/* Floating Emojis */}
+        {/* Floating Glassmorphic Widget 1 */}
         <motion.div
-          animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 text-6xl hidden lg:block opacity-80"
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute left-[8%] top-[15%] hidden lg:flex flex-col gap-3 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-3xl shadow-2xl w-64 rotate-[-4deg] z-20"
         >
-          🥑
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-tr from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-2xl shadow-lg border-2 border-white/30">🛵</div>
+            <div>
+              <div className="text-white font-bold text-sm drop-shadow-sm">سفارش در حال ارسال</div>
+              <div className="text-white/80 text-xs mt-0.5">رسیدن تا ۱۵ دقیقه دیگر</div>
+            </div>
+          </div>
+          <div className="w-full bg-white/20 h-1.5 rounded-full overflow-hidden mt-1">
+            <motion.div 
+              animate={{ width: ["0%", "100%", "0%"] }} 
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }} 
+              className="h-full bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+            />
+          </div>
         </motion.div>
+
+        {/* Floating Glassmorphic Widget 2 */}
         <motion.div
-          animate={{ y: [0, 20, 0], rotate: [0, -10, 0] }}
+          animate={{ y: [0, 15, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-1/4 left-1/3 text-7xl hidden lg:block opacity-60"
+          className="absolute left-[28%] bottom-[20%] hidden lg:flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-5 py-3.5 rounded-2xl shadow-2xl rotate-[3deg] z-20"
         >
-          🥐
+          <div className="text-3xl drop-shadow-lg">🎉</div>
+          <div className="flex flex-col">
+            <span className="text-white font-black text-sm drop-shadow-md">تخفیف ویژه امروز</span>
+            <span className="text-yellow-300 font-bold text-xs mt-0.5">-۵۰٪ محصولات پروتئینی</span>
+          </div>
         </motion.div>
+
+        {/* Floating Emoji */}
         <motion.div
           animate={{ y: [0, -15, 0], rotate: [0, 15, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute top-1/3 left-10 text-5xl hidden lg:block opacity-70"
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute top-1/3 left-[45%] text-5xl hidden lg:block opacity-60 blur-[1px]"
         >
-          🍎
+          🥑
         </motion.div>
 
         {/* Main Content */}
