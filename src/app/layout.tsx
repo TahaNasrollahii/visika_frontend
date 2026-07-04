@@ -26,8 +26,9 @@ export default function RootLayout({
       lang="fa"
       dir="rtl"
       className="h-full antialiased"
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
+      <body className="min-h-full flex flex-col font-sans bg-background text-foreground" suppressHydrationWarning>
         <Toaster position="top-center" richColors dir="rtl" />
         <Header />
         <main className="flex-1">{children}</main>
