@@ -109,7 +109,7 @@ export function Hero() {
               </Button>
             </Link>
             <Link href="/offers" className="flex-1 sm:flex-none">
-              <Button size="lg" variant="outline" className="w-full bg-white/10 hover:bg-white/20 border-white/30 text-white backdrop-blur-md font-bold rounded-2xl px-2 md:px-8 h-12 md:h-14 text-sm md:text-lg transition-all">
+              <Button size="lg" variant="outline" className="w-full bg-white/10 hover:bg-white/20 hover:text-[#F1B400] border-white/30 text-white backdrop-blur-md font-bold rounded-2xl px-2 md:px-8 h-12 md:h-14 text-sm md:text-lg transition-all">
                 مشاهده تخفیف‌ها
               </Button>
             </Link>
