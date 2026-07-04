@@ -1,11 +1,9 @@
 import React from "react"
 import { Heart } from "lucide-react"
-import { bestSellers } from "@/lib/data"
 import { ProductCard } from "@/components/shared/ProductCard"
 
 export default function FavoritesPage() {
-  // Mock favorites - just taking a slice of our dummy data
-  const favorites = bestSellers.slice(0, 4)
+  const favorites: any[] = []
 
   return (
     <div>

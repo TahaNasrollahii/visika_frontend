@@ -6,10 +6,7 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 
 export default function AddressesPage() {
-  const [addresses, setAddresses] = useState([
-    { id: 1, title: "خانه", detail: "تهران، میدان ونک، خیابان ملاصدرا، پلاک ۱۲، واحد ۳", isDefault: true },
-    { id: 2, title: "محل کار", detail: "تهران، خیابان ولیعصر، برج سپهر، طبقه ۴، واحد ۴۰۲", isDefault: false }
-  ])
+  const [addresses, setAddresses] = useState<any[]>([])
 
   const handleDelete = (id: number) => {
     setAddresses(addresses.filter(a => a.id !== id))
