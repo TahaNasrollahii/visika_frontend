@@ -51,47 +51,47 @@ export default function CartPage() {
 
           <div className="bg-card border rounded-3xl shadow-sm overflow-hidden divide-y">
             {cartItems.map((item) => (
-              <div key={item.id} className="p-6 flex flex-col md:flex-row gap-6">
+              <div key={item.id} className="p-3 md:p-6 flex flex-row gap-3 md:gap-6">
                 {/* Product Image */}
-                <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shrink-0 border relative overflow-hidden">
+                <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 border relative overflow-hidden">
                   <Image 
                     src={item.image} 
                     alt={item.title} 
                     fill 
-                    className="object-contain p-2"
+                    className="object-contain p-1 md:p-2"
                   />
                 </div>
                 
-                <div className="flex-1 flex flex-col justify-between">
+                <div className="flex-1 flex flex-col justify-between min-w-0">
                   <div>
-                    <h3 className="font-bold text-lg mb-2 leading-tight">{item.title}</h3>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4"/> گارانتی اصالت</span>
-                      <span>ارسال امروز</span>
+                    <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 leading-tight truncate">{item.title}</h3>
+                    <div className="flex items-center gap-2 md:gap-4 text-[11px] md:text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3 md:w-4 md:h-4"/> گارانتی اصالت</span>
+                      <span className="hidden sm:inline">ارسال امروز</span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between mt-4">
+                  <div className="flex items-center justify-between mt-2 md:mt-4">
                     {/* Quantity Selector */}
-                    <div className="flex items-center border rounded-xl overflow-hidden shadow-sm bg-background">
-                      <button onClick={() => updateQuantity(item.id, 1)} className="w-10 h-10 flex items-center justify-center hover:bg-secondary transition-colors text-primary">
-                        <Plus className="w-4 h-4" />
+                    <div className="flex items-center border rounded-lg md:rounded-xl overflow-hidden shadow-sm bg-background">
+                      <button onClick={() => updateQuantity(item.id, 1)} className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center hover:bg-secondary transition-colors text-primary">
+                        <Plus className="w-3 h-3 md:w-4 md:h-4" />
                       </button>
-                      <span className="w-8 text-center font-bold">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, -1)} className="w-10 h-10 flex items-center justify-center hover:bg-secondary transition-colors text-destructive">
-                        {item.quantity === 1 ? <Trash2 className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
+                      <span className="w-6 md:w-8 text-center font-bold text-xs md:text-base">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, -1)} className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center hover:bg-secondary transition-colors text-destructive">
+                        {item.quantity === 1 ? <Trash2 className="w-3 h-3 md:w-4 md:h-4" /> : <Minus className="w-3 h-3 md:w-4 md:h-4" />}
                       </button>
                     </div>
 
                     {/* Price */}
-                    <div className="text-left">
+                    <div className="text-left pl-1">
                       {item.discountPrice && (
-                        <div className="text-sm text-muted-foreground line-through mb-1">
+                        <div className="text-[10px] md:text-sm text-muted-foreground line-through mb-0.5 md:mb-1">
                           {item.price.toLocaleString("fa-IR")} تومان
                         </div>
                       )}
-                      <div className="text-xl font-bold">
-                        {(item.discountPrice || item.price).toLocaleString("fa-IR")} <span className="text-sm font-normal text-muted-foreground">تومان</span>
+                      <div className="text-sm md:text-xl font-bold">
+                        {(item.discountPrice || item.price).toLocaleString("fa-IR")} <span className="text-[10px] md:text-sm font-normal text-muted-foreground">تومان</span>
                       </div>
                     </div>
                   </div>
