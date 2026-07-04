@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { Search, Filter, SortDesc, ChevronDown, Check } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { bestSellers, hotOffers } from "@/lib/data"
+import api from "@/lib/api"
 import { ProductCard, Product } from "@/components/shared/ProductCard"
 
 function SearchContent() {
@@ -18,8 +18,13 @@ function SearchContent() {
   const [sortMode, setSortMode] = useState<"default" | "cheap" | "expensive">("default")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [allProducts, setAllProducts] = useState<Product[]>([])
 
-  const allProducts = [...bestSellers, ...hotOffers]
+  useEffect(() => {
+    api.get('/products/products/')
+      .then(res => setAllProducts(res.data))
+      .catch(console.error)
+  }, [])
 
   // Filter and sort logic
   useEffect(() => {

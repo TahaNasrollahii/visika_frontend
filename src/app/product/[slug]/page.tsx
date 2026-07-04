@@ -1,17 +1,16 @@
 "use client"
 
-import React, { use } from "react"
+import React, { use, useEffect, useState } from "react"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { ShoppingCart, Heart, Share2, ShieldCheck, Truck, RotateCcw, Store, Star, ChevronLeft, CheckCircle2 } from "lucide-react"
-import { bestSellers, hotOffers } from "@/lib/data"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-
-const allProducts = [...bestSellers, ...hotOffers]
+import api from "@/lib/api"
+import { Product } from "@/components/shared/ProductCard"
 
 // Animation Variants
 const staggerContainer = {
@@ -37,11 +36,23 @@ const slideInRight = {
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
-  const product = allProducts.find(p => p.id === resolvedParams.slug)
-  
-  if (!product) {
-    notFound()
-  }
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [addingToCart, setAddingToCart] = useState(false)
+
+  useEffect(() => {
+    api.get(`/products/products/${resolvedParams.slug}/`)
+      .then(res => {
+        setProduct(res.data)
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }, [resolvedParams.slug])
+
+  if (loading) return <div>در حال بارگذاری...</div>
+  if (!product) return notFound()
 
   const hasDiscount = product.discountPrice && product.discountPrice < product.price
   const discountPercent = hasDiscount

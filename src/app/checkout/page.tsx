@@ -5,6 +5,10 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { MapPin, Clock, CreditCard, ChevronLeft, ShieldCheck, CheckCircle2, Circle, Edit2, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import api from "@/lib/api"
+import { toast } from "sonner"
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -30,9 +34,30 @@ const slideInLeft = {
 export default function CheckoutPage() {
   const [selectedTime, setSelectedTime] = useState(0)
   const [selectedPayment, setSelectedPayment] = useState('online')
+  const [cartTotal, setCartTotal] = useState(0)
+  const [cartItemsTotal, setCartItemsTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [checkingOut, setCheckingOut] = useState(false)
+  const router = useRouter()
 
-  const finalPrice = 111000 // mock price
+  useEffect(() => {
+    api.get('/orders/cart/')
+      .then(res => {
+        const items = res.data.items || []
+        const totalItemsPrice = items.reduce((acc: number, item: any) => acc + (item.product.price * item.quantity), 0)
+        setCartItemsTotal(totalItemsPrice)
+        setCartTotal(res.data.total_price)
+        setLoading(false)
+      })
+      .catch(() => {
+        toast.error("خطا در دریافت سبد خرید")
+        router.push('/cart')
+      })
+  }, [])
+
   const shippingCost = 25000
+  const finalPrice = cartTotal
+  const totalDiscount = cartItemsTotal - finalPrice
 
   const deliveryTimes = ['امروز - ۱۸ تا ۲۰', 'امروز - ۲۰ تا ۲۲', 'فردا - ۱۰ تا ۱۲']
 
@@ -40,6 +65,19 @@ export default function CheckoutPage() {
     { id: 'online', title: 'پرداخت اینترنتی', subtitle: 'پرداخت آنلاین با تمامی کارت‌های بانکی' },
     { id: 'cod', title: 'پرداخت در محل', subtitle: 'با دستگاه کارتخوان هنگام تحویل' }
   ]
+
+  const handleCheckout = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    setCheckingOut(true)
+    try {
+      await api.post('/orders/checkout/')
+      toast.success("سفارش با موفقیت ثبت شد")
+      router.push('/success')
+    } catch (err) {
+      toast.error("خطا در ثبت سفارش")
+      setCheckingOut(false)
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 lg:px-8 min-h-[calc(100vh-200px)] overflow-hidden">
@@ -211,11 +249,11 @@ export default function CheckoutPage() {
               <div className="space-y-4 mb-8 text-base">
                 <div className="flex justify-between items-center text-muted-foreground font-medium">
                   <span>مبلغ کل کالاها</span>
-                  <span className="text-foreground font-bold">۱۱۴,۰۰۰ تومان</span>
+                  <span className="text-foreground font-bold">{cartItemsTotal.toLocaleString("fa-IR")} تومان</span>
                 </div>
                 <div className="flex justify-between items-center text-rose-500 font-bold bg-rose-500/10 p-3 rounded-xl">
                   <span>تخفیف</span>
-                  <span>۳,۰۰۰ تومان</span>
+                  <span>{totalDiscount.toLocaleString("fa-IR")} تومان</span>
                 </div>
                 <div className="flex justify-between items-center text-muted-foreground font-medium">
                   <span>هزینه ارسال</span>
@@ -237,16 +275,13 @@ export default function CheckoutPage() {
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Link href="/success" className="block">
-                  <Button size="lg" className="w-full text-lg font-black rounded-[1.25rem] h-16 shadow-[0_15px_40px_-10px_rgba(var(--primary),0.6)] hover:shadow-[0_20px_50px_-10px_rgba(var(--primary),0.8)] transition-all bg-primary hover:bg-primary/90 text-primary-foreground relative overflow-hidden group border-b-4 border-primary/20 active:border-b-0 active:mt-1">
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      <CheckCircle2 className="w-6 h-6" />
-                      پرداخت و ثبت نهایی
-                    </span>
-                    {/* Subtle shine effect */}
-                    <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
-                  </Button>
-                </Link>
+                <Button onClick={handleCheckout} disabled={checkingOut || loading} size="lg" className="w-full text-lg font-black rounded-[1.25rem] h-16 shadow-[0_15px_40px_-10px_rgba(var(--primary),0.6)] hover:shadow-[0_20px_50px_-10px_rgba(var(--primary),0.8)] transition-all bg-primary hover:bg-primary/90 text-primary-foreground relative overflow-hidden group border-b-4 border-primary/20 active:border-b-0 active:mt-1">
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <CheckCircle2 className="w-6 h-6" />
+                    {checkingOut ? 'در حال ثبت...' : 'پرداخت و ثبت نهایی'}
+                  </span>
+                  <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+                </Button>
               </motion.div>
               
               <motion.div 

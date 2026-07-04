@@ -1,23 +1,59 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import api from "@/lib/api"
+import { useRouter } from "next/navigation"
+import DatePicker from "react-multi-date-picker"
+import persian from "react-date-object/calendars/persian"
+import persian_fa from "react-date-object/locales/persian_fa"
+import transition from "react-element-popper/animations/transition"
+
+const CustomDateInput = React.forwardRef(({ openCalendar, handleValueChange, ...props }: any, ref: any) => {
+  return <Input {...props} ref={ref} />
+})
+CustomDateInput.displayName = "CustomDateInput"
 
 export default function ProfileInfoPage() {
   const [formData, setFormData] = useState({
-    firstName: "علی",
-    lastName: "محمدی",
-    nationalId: "0123456789",
-    email: "ali@example.com",
-    birthDate: "۱۳۷۰/۰۵/۱۲"
+    firstName: "",
+    lastName: "",
+    nationalId: "",
+    email: "",
+    birthDate: ""
   })
+  const [phone, setPhone] = useState("")
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+
+  useEffect(() => {
+    api.get('/users/info/')
+      .then(res => {
+        setPhone(res.data.phone_number)
+        setFormData({
+          firstName: res.data.first_name || "",
+          lastName: res.data.last_name || "",
+          nationalId: "",
+          email: "",
+          birthDate: ""
+        })
+        setLoading(false)
+      })
+      .catch(() => {
+        toast.error('لطفا وارد شوید')
+        router.push('/login')
+      })
+  }, [router])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    // Backend doesn't have profile update API yet, so we mock success
     toast.success("اطلاعات کاربری با موفقیت بروزرسانی شد")
   }
+
+  if (loading) return <div>در حال بارگذاری...</div>
 
   return (
     <div>
@@ -51,7 +87,7 @@ export default function ProfileInfoPage() {
           <div className="space-y-2">
             <label className="text-sm font-medium">شماره موبایل</label>
             <Input 
-              value="۰۹۱۲۳۴۵۶۷۸۹"
+              value={phone}
               disabled
               dir="ltr"
               className="text-left bg-secondary/50 cursor-not-allowed"
@@ -68,11 +104,17 @@ export default function ProfileInfoPage() {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">تاریخ تولد</label>
-            <Input 
+            <DatePicker
+              calendar={persian}
+              locale={persian_fa}
+              calendarPosition="bottom-right"
+              animations={[transition()]}
+              render={<CustomDateInput dir="ltr" className="text-left font-sans tracking-widest cursor-pointer" placeholder="YYYY/MM/DD" />}
               value={formData.birthDate}
-              onChange={(e) => setFormData({...formData, birthDate: e.target.value})}
-              dir="ltr"
-              className="text-left"
+              onChange={(dateObject: any) => {
+                setFormData({...formData, birthDate: dateObject?.format("YYYY/MM/DD") || ""})
+              }}
+              containerClassName="w-full"
             />
           </div>
         </div>

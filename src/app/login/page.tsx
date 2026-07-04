@@ -5,25 +5,58 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import api from "@/lib/api"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
   const [step, setStep] = useState<1 | 2>(1)
   const [phone, setPhone] = useState("")
-
   const [otp, setOtp] = useState("")
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
-  const handleSendOTP = (e: React.FormEvent) => {
+  const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
     if (phone.length === 11) {
-      setStep(2)
+      setLoading(true)
+      try {
+        await api.post('/users/otp/request/', { phone_number: phone })
+        setStep(2)
+        toast.success("کد تایید با موفقیت ارسال شد")
+      } catch (err) {
+        toast.error("خطا در ارسال کد تایید")
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
-  const handleVerify = (e: React.FormEvent) => {
+  const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (otp.length === 5) {
-      // Navigate directly to profile
-      window.location.href = "/profile"
+    if (otp.length === 4) {
+      setLoading(true)
+      try {
+        await api.post('/users/otp/login/', { phone_number: phone, otp })
+        toast.success("ورود موفقیت‌آمیز")
+        router.push('/profile')
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          // User not found, try signing up
+          try {
+            await api.post('/users/signup/', { phone_number: phone, password: "temp_password_visika_123" })
+            await api.post('/users/otp/login/', { phone_number: phone, otp })
+            toast.success("ثبت‌نام و ورود موفقیت‌آمیز")
+            router.push('/profile')
+          } catch (e) {
+            toast.error("خطا در ثبت‌نام")
+          }
+        } else {
+          toast.error("کد تایید نامعتبر است")
+        }
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -73,13 +106,13 @@ export default function LoginPage() {
         {step === 2 && (
           <form onSubmit={handleVerify} className="space-y-6">
             <div className="space-y-2 text-right">
-              <label className="text-sm font-semibold">کد تایید ۵ رقمی</label>
+              <label className="text-sm font-semibold">کد تایید ۴ رقمی</label>
               <div className="flex gap-2 justify-center" dir="ltr">
                 {/* Mock OTP Input - real one uses multiple inputs or specialized library */}
                 <Input 
                   type="text" 
                   className="text-center text-2xl tracking-[1em] h-14 font-bold"
-                  maxLength={5}
+                  maxLength={4}
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   autoFocus

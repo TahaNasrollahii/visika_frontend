@@ -6,6 +6,7 @@ import { Search, ShoppingBag, User, Menu, LayoutGrid } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
+import api from "@/lib/api"
 
 export function Header() {
   const router = useRouter()
@@ -13,14 +14,40 @@ export function Header() {
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("")
+  const [cartCount, setCartCount] = useState(0)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const fetchCartCount = async () => {
+    try {
+      const res = await api.get('/orders/cart/')
+      const items = res.data.items || []
+      const totalQuantity = items.reduce((acc: number, item: any) => acc + item.quantity, 0)
+      setCartCount(totalQuantity)
+      setIsLoggedIn(true)
+    } catch {
+      setCartCount(0)
+      setIsLoggedIn(false)
+    }
+  }
 
   // Add scroll event listener for sticky header styling (glassmorphism)
   React.useEffect(() => {
+    fetchCartCount()
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
+    
+    // Listen for custom event to update cart
+    const handleCartUpdate = () => fetchCartCount()
+
     window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener("cart-updated", handleCartUpdate)
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("cart-updated", handleCartUpdate)
+    }
   }, [])
 
   const handleSearch = (e: React.FormEvent) => {
@@ -134,19 +161,23 @@ export function Header() {
 
             {/* Mobile Actions (Hidden on Desktop) */}
             <div className="flex md:hidden items-center gap-1">
-              <Link href="/login" tabIndex={-1}>
+              <Link href={isLoggedIn ? "/profile" : "/login"} tabIndex={-1}>
                 <Button variant="ghost" size="icon" className="text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
                   <User className="w-[22px] h-[22px]" />
                 </Button>
               </Link>
-              <Link href="/cart" tabIndex={-1}>
-                <Button variant="ghost" size="icon" className="relative text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
-                  <ShoppingBag className="w-[22px] h-[22px]" />
-                  <div className="absolute top-1.5 right-1.5 bg-primary text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-background">
-                    ۱
-                  </div>
-                </Button>
-              </Link>
+              {isLoggedIn ? (
+                <Link href="/cart" tabIndex={-1}>
+                  <Button variant="ghost" size="icon" className="relative text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
+                    <ShoppingBag className="w-[22px] h-[22px]" />
+                    {cartCount > 0 && (
+                      <div className="absolute top-1.5 right-1.5 bg-primary text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-background">
+                        {cartCount.toLocaleString('fa-IR')}
+                      </div>
+                    )}
+                  </Button>
+                </Link>
+              ) : null}
             </div>
           </div>
 
@@ -169,22 +200,35 @@ export function Header() {
 
           {/* Desktop Left Section: Actions (Hidden on Mobile) */}
           <div className="hidden md:flex items-center gap-2 md:gap-5 shrink-0">
-            <Link href="/login" tabIndex={-1}>
-              <Button variant="ghost" className="gap-2 text-foreground/80 hover:text-foreground font-semibold text-sm px-3 hover:bg-secondary/80 h-11 rounded-xl">
-                <User className="w-[22px] h-[22px]" />
-                حساب کاربری
-              </Button>
-            </Link>
+            {isLoggedIn && (
+              <Link href="/profile" tabIndex={-1}>
+                <Button variant="ghost" className="gap-2 text-foreground/80 hover:text-foreground font-semibold text-sm px-3 hover:bg-secondary/80 h-11 rounded-xl">
+                  <User className="w-[22px] h-[22px]" />
+                  حساب کاربری
+                </Button>
+              </Link>
+            )}
 
-            <Link href="/cart" tabIndex={-1}>
-              <Button className="h-[46px] px-5 rounded-full gap-2 font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all flex items-center text-sm">
-                <ShoppingBag className="w-5 h-5" />
-                <span>سبد خرید</span>
-                <div className="bg-white/20 text-white w-6 h-6 rounded-full flex items-center justify-center text-[13px] pt-[2px] ml-1">
-                  ۱
-                </div>
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/cart" tabIndex={-1}>
+                <Button className="h-[46px] px-5 rounded-full gap-2 font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all flex items-center text-sm">
+                  <ShoppingBag className="w-5 h-5" />
+                  <span>سبد خرید</span>
+                  {cartCount > 0 && (
+                    <div className="bg-white/20 text-white w-6 h-6 rounded-full flex items-center justify-center text-[13px] pt-[2px] ml-1">
+                      {cartCount.toLocaleString('fa-IR')}
+                    </div>
+                  )}
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/login" tabIndex={-1}>
+                <Button className="h-[46px] px-5 rounded-full gap-2 font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all flex items-center text-sm">
+                  <User className="w-5 h-5" />
+                  <span>وارد شوید</span>
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
 

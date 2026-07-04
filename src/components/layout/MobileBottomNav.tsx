@@ -1,18 +1,38 @@
 "use client"
 
-import React from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Search, ShoppingCart, User, Grid2x2 } from "lucide-react"
+import { Home, Search, ShoppingCart, User, LayoutGrid } from "lucide-react"
 import { cn } from "@/lib/utils"
+import api from "@/lib/api"
 
 export function MobileBottomNav() {
   const pathname = usePathname()
+  const [cartCount, setCartCount] = useState(0)
+
+  const fetchCartCount = async () => {
+    try {
+      const res = await api.get('/orders/cart/')
+      const items = res.data.items || []
+      const totalQuantity = items.reduce((acc: number, item: any) => acc + item.quantity, 0)
+      setCartCount(totalQuantity)
+    } catch {
+      setCartCount(0)
+    }
+  }
+
+  useEffect(() => {
+    fetchCartCount()
+    const handleCartUpdate = () => fetchCartCount()
+    window.addEventListener("cart-updated", handleCartUpdate)
+    return () => window.removeEventListener("cart-updated", handleCartUpdate)
+  }, [])
 
   const navItems = [
     { name: "خانه", href: "/", icon: Home },
-    { name: "دسته‌بندی", href: "/categories", icon: Grid2x2 },
-    { name: "سبد خرید", href: "/cart", icon: ShoppingCart, badge: 3 },
+    { name: "دسته‌بندی", href: "/categories", icon: LayoutGrid },
+    { name: "سبد خرید", href: "/cart", icon: ShoppingCart, badge: cartCount },
     { name: "پروفایل", href: "/profile", icon: User },
   ]
 
@@ -34,11 +54,11 @@ export function MobileBottomNav() {
             >
               <div className="relative">
                 <Icon className={cn("w-6 h-6", isActive && "fill-primary/20")} strokeWidth={isActive ? 2.5 : 2} />
-                {item.badge && (
+                {item.badge ? (
                   <span className="absolute -top-1.5 -right-2 bg-destructive text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-background">
-                    {item.badge}
+                    {item.badge.toLocaleString('fa-IR')}
                   </span>
-                )}
+                ) : null}
               </div>
               <span className={cn("text-[10px] font-medium", isActive && "font-bold")}>
                 {item.name}

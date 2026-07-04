@@ -1,34 +1,73 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Trash2, Plus, Minus, ShoppingCart, ChevronLeft, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import api from "@/lib/api"
+import { useRouter } from "next/navigation"
+
+interface CartItem {
+  id: number
+  product: {
+    id: string
+    title: string
+    price: number
+    discountPrice?: number
+    image: string
+  }
+  quantity: number
+  total_price: number
+}
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, title: "شیر کم چرب کاله 1 لیتری", price: 35000, discountPrice: 32000, quantity: 2, image: "/products/Gemini_Generated_Image_3hpnii3hpnii3hpn.png" },
-    { id: 2, title: "پنیر فتا دوشه هراز 400 گرمی", price: 45000, quantity: 1, image: "/products/Gemini_Generated_Image_crjfk1crjfk1crjf.png" },
-  ])
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [cartTotal, setCartTotal] = useState(0)
+  const router = useRouter()
 
-  const totalItemsPrice = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)
-  const totalDiscount = cartItems.reduce((acc, item) => acc + ((item.price - (item.discountPrice || item.price)) * item.quantity), 0)
-  const finalPrice = totalItemsPrice - totalDiscount
-
-  const updateQuantity = (id: number, delta: number) => {
-    setCartItems(items => items.map(item => {
-      if (item.id === id) {
-        const newQuantity = item.quantity + delta
-        if (newQuantity <= 0) {
-          toast.success('کالا از سبد خرید حذف شد')
-          return { ...item, quantity: 0 } // In real app, we'd filter it out, but keep it simple
-        }
-        return { ...item, quantity: newQuantity }
+  const fetchCart = async () => {
+    try {
+      const res = await api.get('/orders/cart/')
+      setCartItems(res.data.items)
+      setCartTotal(res.data.total_price)
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        toast.error("برای مشاهده سبد خرید وارد شوید")
+        router.push("/login")
       }
-      return item
-    }).filter(item => item.quantity > 0))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchCart()
+  }, [])
+
+  const totalItemsPrice = cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0)
+  const totalDiscount = cartItems.reduce((acc, item) => acc + ((item.product.price - (item.product.discountPrice || item.product.price)) * item.quantity), 0)
+  const finalPrice = cartTotal || (totalItemsPrice - totalDiscount)
+
+  const updateQuantity = async (id: number, delta: number) => {
+    const item = cartItems.find(i => i.id === id)
+    if (!item) return
+    const newQuantity = item.quantity + delta
+
+    try {
+      if (newQuantity <= 0) {
+        await api.delete(`/orders/cart/items/${id}/`)
+        toast.success('کالا از سبد خرید حذف شد')
+      } else {
+        await api.patch(`/orders/cart/items/${id}/`, { quantity: newQuantity })
+      }
+      window.dispatchEvent(new Event('cart-updated'))
+      fetchCart() // Refresh cart
+    } catch (e) {
+      toast.error('خطا در بروزرسانی سبد خرید')
+    }
   }
 
   return (
@@ -53,8 +92,8 @@ export default function CartPage() {
                 {/* Product Image */}
                 <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 border relative overflow-hidden">
                   <Image 
-                    src={item.image} 
-                    alt={item.title} 
+                    src={item.product.image || '/placeholder.png'} 
+                    alt={item.product.title} 
                     fill 
                     className="object-contain p-1 md:p-2"
                   />
@@ -62,7 +101,7 @@ export default function CartPage() {
                 
                 <div className="flex-1 flex flex-col justify-between min-w-0">
                   <div>
-                    <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 leading-tight truncate">{item.title}</h3>
+                    <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 leading-tight truncate">{item.product.title}</h3>
                     <div className="flex items-center gap-2 md:gap-4 text-[11px] md:text-sm text-muted-foreground">
                       <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3 md:w-4 md:h-4"/> گارانتی اصالت</span>
                       <span className="hidden sm:inline">ارسال امروز</span>
@@ -83,13 +122,13 @@ export default function CartPage() {
 
                     {/* Price */}
                     <div className="text-left pl-1">
-                      {item.discountPrice && (
+                      {item.product.discountPrice && (
                         <div className="text-[10px] md:text-sm text-muted-foreground line-through mb-0.5 md:mb-1">
-                          {item.price.toLocaleString("fa-IR")} تومان
+                          {item.product.price.toLocaleString("fa-IR")} تومان
                         </div>
                       )}
                       <div className="text-sm md:text-xl font-bold">
-                        {(item.discountPrice || item.price).toLocaleString("fa-IR")} <span className="text-[10px] md:text-sm font-normal text-muted-foreground">تومان</span>
+                        {(item.product.discountPrice || item.product.price).toLocaleString("fa-IR")} <span className="text-[10px] md:text-sm font-normal text-muted-foreground">تومان</span>
                       </div>
                     </div>
                   </div>

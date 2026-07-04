@@ -1,6 +1,5 @@
 "use client"
-
-import React from "react"
+import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Plus, Heart, ShoppingCart } from "lucide-react"
@@ -8,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import api from "@/lib/api"
 
 export interface Product {
   id: string
@@ -23,7 +23,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [isFavorite, setIsFavorite] = React.useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [addingToCart, setAddingToCart] = useState(false)
 
   const hasDiscount = product.discountPrice && product.discountPrice < product.price
   const discountPercent = hasDiscount
@@ -39,6 +40,25 @@ export function ProductCard({ product }: ProductCardProps) {
     } else {
       setIsFavorite(true)
       toast.success('به لیست علاقه‌مندی‌ها اضافه شد')
+    }
+  }
+
+  const addToCart = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setAddingToCart(true)
+    try {
+      await api.post('/orders/cart/items/', { product_id: product.id, quantity: 1 })
+      toast.success('محصول به سبد خرید اضافه شد')
+      window.dispatchEvent(new Event('cart-updated'))
+    } catch (err: any) {
+      if (err.response?.status === 401 || err.response?.status === 403) {
+         toast.error('ابتدا وارد حساب کاربری خود شوید')
+      } else {
+         toast.error('خطا در افزودن به سبد خرید')
+      }
+    } finally {
+      setAddingToCart(false)
     }
   }
 
@@ -69,7 +89,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <Link href={`/product/${product.id}`} className="relative aspect-square p-4 flex items-center justify-center bg-white">
         <div className="relative w-full h-full rounded-xl overflow-hidden">
           <Image 
-            src={product.image} 
+            src={product.image || '/placeholder.png'} 
             alt={product.title} 
             fill 
             className="object-contain hover:scale-105 transition-transform duration-300"
@@ -97,7 +117,8 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
           
           <Button 
-            onClick={() => toast.success('محصول به سبد خرید اضافه شد')}
+            onClick={addToCart}
+            disabled={addingToCart}
             size="icon" 
             className="h-9 w-9 rounded-full shadow-sm"
           >

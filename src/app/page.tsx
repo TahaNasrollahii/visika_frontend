@@ -1,12 +1,35 @@
 import Link from "next/link"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { ProductCard } from "@/components/shared/ProductCard"
-import { bestSellers, hotOffers, categories } from "@/lib/data"
+import { ProductCard, Product } from "@/components/shared/ProductCard"
 import { Button } from "@/components/ui/button"
 import { Hero } from "@/components/home/Hero"
 import { HotOffers } from "@/components/home/HotOffers"
 
-export default function Home() {
+async function getCategories() {
+  const res = await fetch("http://127.0.0.1:8000/products/categories/", { cache: "no-store" })
+  if (!res.ok) return []
+  return res.json()
+}
+
+async function getBestSellers() {
+  const res = await fetch("http://127.0.0.1:8000/products/products/?is_best_seller=true", { cache: "no-store" })
+  if (!res.ok) return []
+  return res.json()
+}
+
+async function getHotOffers() {
+  const res = await fetch("http://127.0.0.1:8000/products/products/?is_hot_offer=true", { cache: "no-store" })
+  if (!res.ok) return []
+  return res.json()
+}
+
+export default async function Home() {
+  const [categories, bestSellers, hotOffers] = await Promise.all([
+    getCategories(),
+    getBestSellers(),
+    getHotOffers()
+  ])
+
   return (
     <div className="flex flex-col gap-12 pb-12">
       {/* Hero Section */}
