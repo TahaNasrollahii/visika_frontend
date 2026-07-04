@@ -9,8 +9,8 @@ import { toast } from "sonner"
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([
-    { id: 1, title: "شیر کم چرب کاله 1 لیتری", price: 35000, discountPrice: 32000, quantity: 2, image: "https://placehold.co/500x500/f8fafc/334155.png?text=Milk" },
-    { id: 2, title: "پنیر فتا دوشه هراز 400 گرمی", price: 45000, quantity: 1, image: "https://placehold.co/500x500/f8fafc/334155.png?text=Cheese" },
+    { id: 1, title: "شیر کم چرب کاله 1 لیتری", price: 35000, discountPrice: 32000, quantity: 2, image: "/products/Gemini_Generated_Image_3hpnii3hpnii3hpn.png" },
+    { id: 2, title: "پنیر فتا دوشه هراز 400 گرمی", price: 45000, quantity: 1, image: "/products/Gemini_Generated_Image_crjfk1crjfk1crjf.png" },
   ])
 
   const totalItemsPrice = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)
