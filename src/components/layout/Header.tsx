@@ -37,10 +37,7 @@ export function Header() {
         : "bg-background border-b"
         }`}
     >
-      {/* Top Banner (Optional for promos) */}
-      <div className="bg-primary text-primary-foreground py-1.5 text-xs text-center font-medium">
-        ارسال رایگان برای سفارش‌های بالای ۵۰۰ هزار تومان!
-      </div>
+
 
       <div className="container mx-auto px-4 lg:px-8 pb-3 md:pb-0">
         {/* Desktop: Single Row. Mobile: Two Rows (Top Nav + Search) */}
@@ -191,26 +188,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* Bottom Nav / Categories Menu (Desktop) */}
-        <div className="hidden lg:flex items-center justify-between h-14 text-sm font-medium text-muted-foreground border-t mt-2">
 
-          <div className="flex items-center gap-6 h-full">
-            {/* Links */}
-            <Link href="/" className="text-primary border-b-2 border-primary py-4 font-bold">خانه</Link>
-            <Link href="/categories/fruits" className="hover:text-foreground py-4 transition-colors">میوه و سبزیجات</Link>
-            <Link href="/categories/dairy" className="hover:text-foreground py-4 transition-colors">لبنیات و پروتئین</Link>
-            <Link href="/categories/bakery" className="hover:text-foreground py-4 transition-colors">نان و غلات</Link>
-            <Link href="/offers" className="text-destructive hover:text-destructive/80 py-4 transition-colors font-bold">
-              پیشنهادهای داغ 🔥
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-6 h-full text-[13px]">
-            <Link href="/about" className="hover:text-foreground transition-colors">درباره ما</Link>
-            <Link href="/contact" className="hover:text-foreground transition-colors">تماس با ما</Link>
-            <Link href="/faq" className="hover:text-foreground transition-colors">سوالات متداول</Link>
-          </div>
-        </div>
       </div>
     </header>
   )
