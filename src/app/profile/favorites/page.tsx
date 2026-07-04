@@ -1,9 +1,36 @@
-import React from "react"
+"use client"
+import React, { useEffect, useState } from "react"
 import { Heart } from "lucide-react"
 import { ProductCard } from "@/components/shared/ProductCard"
+import api from "@/lib/api"
+import { toast } from "sonner"
 
 export default function FavoritesPage() {
-  const favorites: any[] = []
+  const [favorites, setFavorites] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchFavorites = async () => {
+    try {
+      const res = await api.get('/users/favorites/')
+      setFavorites(res.data)
+    } catch (err) {
+      toast.error('خطا در دریافت علاقه‌مندی‌ها')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchFavorites()
+
+    const handleUpdate = () => fetchFavorites()
+    window.addEventListener('favorites-updated', handleUpdate)
+    return () => window.removeEventListener('favorites-updated', handleUpdate)
+  }, [])
+
+  if (loading) {
+    return <div>در حال بارگذاری...</div>
+  }
 
   return (
     <div>

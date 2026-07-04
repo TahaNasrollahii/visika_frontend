@@ -108,8 +108,25 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
             {/* Gallery Actions - Floating */}
             <div className="absolute top-6 left-6 flex flex-col gap-3 z-20">
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Button onClick={() => toast.success('به علاقه‌مندی‌ها اضافه شد')} variant="outline" size="icon" className="w-12 h-12 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md hover:bg-white dark:hover:bg-zinc-800 hover:text-destructive border-white/20 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] text-muted-foreground transition-all duration-300">
-                  <Heart className="w-5 h-5" />
+                <Button 
+                  onClick={async () => {
+                    const previousState = product.is_favorite
+                    setProduct({...product, is_favorite: !previousState})
+                    try {
+                      await api.post(`/users/favorites/${product.id}/toggle/`)
+                      if (previousState) toast.info('از لیست علاقه‌مندی‌ها حذف شد')
+                      else toast.success('به علاقه‌مندی‌ها اضافه شد')
+                      window.dispatchEvent(new Event('favorites-updated'))
+                    } catch (err: any) {
+                      setProduct({...product, is_favorite: previousState})
+                      if (err.response?.status === 401 || err.response?.status === 403) toast.error('ابتدا وارد حساب کاربری خود شوید')
+                      else toast.error('خطا در ارتباط با سرور')
+                    }
+                  }} 
+                  variant="outline" 
+                  size="icon" 
+                  className={`w-12 h-12 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md hover:bg-white dark:hover:bg-zinc-800 hover:text-destructive border-white/20 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 ${product.is_favorite ? 'text-destructive' : 'text-muted-foreground'}`}>
+                  <Heart className={`w-5 h-5 ${product.is_favorite ? 'fill-destructive' : ''}`} />
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>

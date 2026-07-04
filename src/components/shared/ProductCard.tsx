@@ -16,6 +16,7 @@ export interface Product {
   discountPrice?: number
   image: string
   badge?: string
+  is_favorite?: boolean
 }
 
 interface ProductCardProps {
@@ -23,7 +24,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(product.is_favorite || false)
   const [addingToCart, setAddingToCart] = useState(false)
 
   const hasDiscount = product.discountPrice && product.discountPrice < product.price
@@ -31,15 +32,30 @@ export function ProductCard({ product }: ProductCardProps) {
     ? Math.round(((product.price - product.discountPrice!) / product.price) * 100)
     : 0
 
-  const toggleFavorite = (e: React.MouseEvent) => {
+  const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (isFavorite) {
-      setIsFavorite(false)
-      toast.info('از لیست علاقه‌مندی‌ها حذف شد')
-    } else {
-      setIsFavorite(true)
-      toast.success('به لیست علاقه‌مندی‌ها اضافه شد')
+    
+    // Optimistic UI update
+    const previousState = isFavorite
+    setIsFavorite(!isFavorite)
+    
+    try {
+      await api.post(`/users/favorites/${product.id}/toggle/`)
+      if (previousState) {
+        toast.info('از لیست علاقه‌مندی‌ها حذف شد')
+      } else {
+        toast.success('به لیست علاقه‌مندی‌ها اضافه شد')
+      }
+      window.dispatchEvent(new Event('favorites-updated'))
+    } catch (err: any) {
+      // Revert if failed
+      setIsFavorite(previousState)
+      if (err.response?.status === 401 || err.response?.status === 403) {
+         toast.error('ابتدا وارد حساب کاربری خود شوید')
+      } else {
+         toast.error('خطا در ارتباط با سرور')
+      }
     }
   }
 
