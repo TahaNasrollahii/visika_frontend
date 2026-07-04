@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { Search, ShoppingBag, User, Menu } from "lucide-react"
+import { Search, ShoppingBag, User, Menu, LayoutGrid } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
@@ -111,23 +111,95 @@ export function Header() {
         </div>
 
         {/* Bottom Nav / Categories Menu (Desktop) */}
-        <div className="hidden lg:flex items-center gap-6 h-12 text-sm font-medium text-muted-foreground border-t">
-          <Link href="/categories" tabIndex={-1}>
-            <Button variant="ghost" className="gap-2 font-bold text-foreground hover:bg-secondary rounded-lg px-3">
-              <Menu className="w-5 h-5" />
-              دسته‌بندی کالاها
-            </Button>
-          </Link>
-          <Link href="/offers" className="hover:text-primary transition-colors flex items-center gap-1">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive"></span>
-            </span>
-            تخفیف‌ها و پیشنهادها
-          </Link>
-          <Link href="/best-selling" className="hover:text-primary transition-colors">پرفروش‌ترین‌ها</Link>
-          <Link href="/newest" className="hover:text-primary transition-colors">جدیدترین‌ها</Link>
-          <Link href="/about" className="hover:text-primary transition-colors">سوالی دارید؟</Link>
+        <div className="hidden lg:flex items-center justify-between h-14 text-sm font-medium text-muted-foreground border-t mt-2">
+          
+          <div className="flex items-center gap-6 h-full">
+            <div className="relative group h-full flex items-center">
+              <Link href="/categories" tabIndex={-1}>
+                <Button variant="ghost" className="gap-2 font-bold text-foreground hover:bg-secondary rounded-lg px-3">
+                  <LayoutGrid className="w-5 h-5" />
+                  همه دسته‌بندی‌ها
+                </Button>
+              </Link>
+
+              {/* Mega Menu Dropdown */}
+              <div className="absolute top-full right-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 w-[650px] z-50">
+                <div className="bg-background border rounded-3xl shadow-xl overflow-hidden p-6 flex flex-col gap-6">
+                  
+                  {/* Categories Columns */}
+                  <div className="grid grid-cols-3 gap-8">
+                    {/* Column 1 */}
+                    <div className="flex flex-col gap-3">
+                      <Link href="/categories/fruits" className="font-bold text-foreground flex items-center gap-2 hover:text-primary transition-colors">
+                        <span className="text-xl">🍎</span>
+                        میوه‌جات
+                      </Link>
+                      <div className="flex flex-col gap-2.5 pr-7 text-[13px] text-muted-foreground">
+                        <Link href="#" className="hover:text-foreground transition-colors">سیب و گلابی</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">مرکبات</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">موز و آناناس</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">میوه‌های فصلی</Link>
+                      </div>
+                    </div>
+
+                    {/* Column 2 */}
+                    <div className="flex flex-col gap-3">
+                      <Link href="/categories/dairy" className="font-bold text-foreground flex items-center gap-2 hover:text-primary transition-colors">
+                        <span className="text-xl">🧀</span>
+                        لبنیات و پروتئین
+                      </Link>
+                      <div className="flex flex-col gap-2.5 pr-7 text-[13px] text-muted-foreground">
+                        <Link href="#" className="hover:text-foreground transition-colors">شیر و ماست</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">پنیر</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">تخم‌مرغ</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">مرغ و گوشت</Link>
+                      </div>
+                    </div>
+
+                    {/* Column 3 */}
+                    <div className="flex flex-col gap-3">
+                      <Link href="/categories/bakery" className="font-bold text-foreground flex items-center gap-2 hover:text-primary transition-colors">
+                        <span className="text-xl">🍞</span>
+                        نان و غلات
+                      </Link>
+                      <div className="flex flex-col gap-2.5 pr-7 text-[13px] text-muted-foreground">
+                        <Link href="#" className="hover:text-foreground transition-colors">نان تازه</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">برنج و حبوبات</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">ماکارونی</Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">صبحانه</Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Promotional Banner */}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-4 flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-bold text-blue-600 dark:text-blue-400">تخفیف ویژه میوه‌های تابستانی 🍉</span>
+                      <span className="text-[11px] text-muted-foreground mt-1">تا ۳۰٪ تخفیف روی محصولات منتخب</span>
+                    </div>
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-5 h-8 text-xs font-bold shadow-md">
+                      مشاهده
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Links */}
+            <Link href="/" className="text-primary border-b-2 border-primary py-4 font-bold">خانه</Link>
+            <Link href="/categories/fruits" className="hover:text-foreground py-4 transition-colors">میوه و سبزیجات</Link>
+            <Link href="/categories/dairy" className="hover:text-foreground py-4 transition-colors">لبنیات و پروتئین</Link>
+            <Link href="/categories/bakery" className="hover:text-foreground py-4 transition-colors">نان و غلات</Link>
+            <Link href="/offers" className="text-destructive hover:text-destructive/80 py-4 transition-colors font-bold">
+              پیشنهادهای داغ 🔥
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-6 h-full text-[13px]">
+            <Link href="/about" className="hover:text-foreground transition-colors">درباره ما</Link>
+            <Link href="/contact" className="hover:text-foreground transition-colors">تماس با ما</Link>
+            <Link href="/faq" className="hover:text-foreground transition-colors">سوالات متداول</Link>
+          </div>
         </div>
       </div>
     </header>
