@@ -69,7 +69,7 @@ export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
       <div 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="bg-gradient-to-br from-primary to-primary/80 rounded-[2rem] p-6 md:p-8 lg:p-10 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 overflow-hidden relative shadow-2xl shadow-primary/20 border border-primary/10"
+        className="bg-gradient-to-br from-primary to-primary/80 rounded-[2rem] p-4 md:p-6 lg:p-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-6 lg:gap-8 overflow-hidden relative shadow-2xl shadow-primary/20 border border-primary/10"
       >
         
         {/* Decorative background elements */}
@@ -77,40 +77,40 @@ export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
 
         {/* Intro Block (Right Side in RTL) */}
-        <div className="w-full lg:w-64 shrink-0 flex flex-col items-center justify-center text-white text-center space-y-6 lg:space-y-8 py-4 relative z-10">
-          <div className="space-y-3">
-            <span className="inline-block py-1.5 px-4 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs md:text-sm font-bold tracking-wider shadow-sm">
+        <div className="w-full lg:w-48 shrink-0 flex flex-col items-center justify-center text-white text-center space-y-4 lg:space-y-6 py-2 relative z-10">
+          <div className="space-y-2">
+            <span className="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-bold tracking-wider shadow-sm">
               پیشنهاد ویژه
             </span>
-            <h2 className="text-4xl md:text-5xl font-black leading-tight drop-shadow-md">
+            <h2 className="text-3xl md:text-4xl font-black leading-tight drop-shadow-md">
               شگفت‌انگیز
             </h2>
-            <p className="text-white/90 font-medium text-base md:text-lg">
+            <p className="text-white/90 font-medium text-sm md:text-base">
               تخفیف‌های بی‌نظیر امروز
             </p>
           </div>
           
           {/* Animated percentage badge */}
-          <div className="relative group cursor-pointer my-4 lg:my-6">
+          <div className="relative group cursor-pointer my-2 lg:my-4">
             <div className="absolute inset-0 bg-white/30 blur-xl rounded-full scale-110 group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="relative w-24 h-24 md:w-32 md:h-32 bg-gradient-to-tr from-yellow-400 to-yellow-200 rounded-full flex items-center justify-center shadow-xl border-4 border-white/40 transform group-hover:-translate-y-2 group-hover:rotate-12 transition-all duration-300">
-              <span className="text-5xl md:text-6xl font-black text-primary drop-shadow-sm">%</span>
+            <div className="relative w-16 h-16 md:w-20 md:h-20 bg-gradient-to-tr from-yellow-400 to-yellow-200 rounded-full flex items-center justify-center shadow-xl border-4 border-white/40 transform group-hover:-translate-y-2 group-hover:rotate-12 transition-all duration-300">
+              <span className="text-3xl md:text-4xl font-black text-primary drop-shadow-sm">%</span>
             </div>
           </div>
 
           {/* Navigation Arrows */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2">
             <button 
               onClick={scrollPrev}
-              className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-primary transition-all duration-300 shadow-lg hover:-translate-y-1"
+              className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-primary transition-all duration-300 shadow-lg hover:-translate-y-1"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5" />
             </button>
             <button 
               onClick={scrollNext}
-              className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-primary transition-all duration-300 shadow-lg hover:-translate-y-1"
+              className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-primary transition-all duration-300 shadow-lg hover:-translate-y-1"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
           </div>
 
@@ -127,10 +127,10 @@ export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
           onMouseLeave={handleMouseLeave}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
-          className={`flex-1 w-full overflow-x-auto flex gap-4 md:gap-6 pb-6 pt-4 lg:py-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} items-stretch relative z-10 px-2`}
+          className={`flex-1 w-full overflow-x-auto flex gap-3 md:gap-4 pb-4 pt-2 lg:py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} items-stretch relative z-10 px-2`}
         >
           {hotOffers.map((product) => (
-            <div key={product.id} className="w-[220px] md:w-[250px] shrink-0 group/card pointer-events-none">
+            <div key={product.id} className="w-[160px] md:w-[190px] shrink-0 group/card pointer-events-none">
               {/* Added pointer-events-none to children so dragging over cards works perfectly */}
               <div className="h-full transform group-hover/card:-translate-y-2 transition-transform duration-300 pointer-events-auto">
                 <ProductCard product={product} />
@@ -139,8 +139,8 @@ export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
           ))}
           
           {/* View All Card */}
-          <div className="w-[180px] md:w-[220px] shrink-0 flex items-stretch py-1 pointer-events-none">
-            <Link href="/offers" className="pointer-events-auto flex flex-col items-center justify-center w-full h-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all duration-300 rounded-3xl border border-white/20 hover:border-white/40 text-white gap-5 group shadow-lg min-h-[300px]">
+          <div className="w-[140px] md:w-[170px] shrink-0 flex items-stretch py-1 pointer-events-none">
+            <Link href="/offers" className="pointer-events-auto flex flex-col items-center justify-center w-full h-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all duration-300 rounded-3xl border border-white/20 hover:border-white/40 text-white gap-4 group shadow-lg min-h-[220px]">
               <div className="w-16 h-16 rounded-full bg-white text-primary flex items-center justify-center group-hover:scale-110 group-hover:-translate-x-2 transition-all duration-300 shadow-xl">
                 <ChevronLeft className="w-8 h-8" />
               </div>
