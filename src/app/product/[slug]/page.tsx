@@ -4,13 +4,36 @@ import React, { use } from "react"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { ShoppingCart, Heart, Share2, ShieldCheck, Truck, RotateCcw, Store, Star, ChevronLeft } from "lucide-react"
+import { motion } from "framer-motion"
+import { ShoppingCart, Heart, Share2, ShieldCheck, Truck, RotateCcw, Store, Star, ChevronLeft, CheckCircle2 } from "lucide-react"
 import { bestSellers, hotOffers } from "@/lib/data"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 
 const allProducts = [...bestSellers, ...hotOffers]
+
+// Animation Variants
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    }
+  }
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+}
+
+const slideInRight = {
+  hidden: { opacity: 0, x: 30 },
+  show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 28 } }
+}
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -26,151 +49,220 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     : 0
 
   return (
-    <div className="container mx-auto px-4 py-8 lg:px-8">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap pb-2">
+    <div className="container mx-auto px-4 py-8 lg:px-8 overflow-hidden min-h-[calc(100vh-200px)]">
+      
+      {/* Breadcrumbs - Animated */}
+      <motion.nav 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="flex items-center gap-2 text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide"
+      >
         <Link href="/" className="hover:text-primary transition-colors">خانه</Link>
-        <ChevronLeft className="w-4 h-4" />
+        <ChevronLeft className="w-4 h-4 opacity-50" />
         <Link href="/categories" className="hover:text-primary transition-colors">سوپرمارکت</Link>
-        <ChevronLeft className="w-4 h-4" />
+        <ChevronLeft className="w-4 h-4 opacity-50" />
         <Link href="/categories/dairy" className="hover:text-primary transition-colors">لبنیات</Link>
-        <ChevronLeft className="w-4 h-4" />
-        <span className="text-foreground font-medium">{product.title}</span>
-      </nav>
+        <ChevronLeft className="w-4 h-4 opacity-50" />
+        <span className="text-foreground font-medium bg-primary/10 px-2.5 py-1 rounded-lg text-primary">{product.title}</span>
+      </motion.nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+      <motion.div 
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10"
+      >
         
-        {/* Product Gallery (Left in LTR, Right in RTL) */}
-        <div className="lg:col-span-4 space-y-4">
-          <div className="aspect-square rounded-3xl bg-white flex items-center justify-center border relative overflow-hidden group">
-            <Image 
-              src={product.image} 
-              alt={product.title} 
-              fill 
-              className="object-contain p-4"
-              priority
-            />
+        {/* Product Gallery (Immersive) */}
+        <motion.div variants={fadeUp} className="lg:col-span-5 space-y-6">
+          <div className="relative aspect-square rounded-[2rem] flex items-center justify-center p-8 overflow-hidden group shadow-sm bg-gradient-to-tr from-secondary/50 via-background to-secondary/30 border border-border/60">
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             
-            {/* Gallery Actions */}
-            <div className="absolute top-4 left-4 flex flex-col gap-3">
-              <Button onClick={() => toast.success('به علاقه‌مندی‌ها اضافه شد')} variant="outline" size="icon" className="rounded-full bg-background/80 backdrop-blur-sm hover:text-destructive border-transparent shadow-sm">
-                <Heart className="w-5 h-5" />
-              </Button>
-              <Button onClick={() => toast.success('لینک کپی شد')} variant="outline" size="icon" className="rounded-full bg-background/80 backdrop-blur-sm hover:text-primary border-transparent shadow-sm">
-                <Share2 className="w-5 h-5" />
-              </Button>
+            <motion.div 
+              className="relative w-full h-full z-10 flex items-center justify-center"
+              whileHover={{ scale: 1.05, rotate: -2 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            >
+              <Image 
+                src={product.image} 
+                alt={product.title} 
+                fill 
+                className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)]"
+                priority
+              />
+            </motion.div>
+            
+            {/* Gallery Actions - Floating */}
+            <div className="absolute top-6 left-6 flex flex-col gap-3 z-20">
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <Button onClick={() => toast.success('به علاقه‌مندی‌ها اضافه شد')} variant="outline" size="icon" className="w-12 h-12 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md hover:bg-white dark:hover:bg-zinc-800 hover:text-destructive border-white/20 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] text-muted-foreground transition-all duration-300">
+                  <Heart className="w-5 h-5" />
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <Button onClick={() => toast.success('لینک کپی شد')} variant="outline" size="icon" className="w-12 h-12 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md hover:bg-white dark:hover:bg-zinc-800 hover:text-primary border-white/20 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] text-muted-foreground transition-all duration-300">
+                  <Share2 className="w-5 h-5" />
+                </Button>
+              </motion.div>
             </div>
           </div>
           
-          {/* Thumbnails */}
+          {/* Interactive Thumbnails */}
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className={`aspect-square rounded-xl flex items-center justify-center cursor-pointer border-2 transition-colors ${i === 1 ? 'border-primary bg-primary/5' : 'border-transparent bg-secondary/30 hover:border-primary/50'}`}>
-                <ShoppingCart className="w-6 h-6 text-muted-foreground/30" />
-              </div>
+              <motion.div 
+                key={i} 
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.95 }}
+                className={`aspect-square rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 shadow-sm overflow-hidden relative ${i === 1 ? 'ring-2 ring-primary ring-offset-2 ring-offset-background bg-gradient-to-br from-primary/10 to-transparent' : 'bg-secondary/50 hover:bg-secondary/80 border border-transparent'}`}
+              >
+                {i === 1 ? (
+                   <Image src={product.image} alt="thumbnail" fill className="object-contain p-2" />
+                ) : (
+                  <ShoppingCart className="w-6 h-6 text-muted-foreground/30" />
+                )}
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Product Info */}
-        <div className="lg:col-span-5 space-y-8">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">برند: کاله</span>
-              <div className="flex items-center gap-1 text-amber-500 text-sm font-medium">
+        {/* Product Info - Redesigned Layout */}
+        <motion.div variants={fadeUp} className="lg:col-span-4 flex flex-col justify-center space-y-8 lg:px-4">
+          <div className="space-y-5">
+            <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3">
+              <Badge variant="secondary" className="px-3 py-1.5 rounded-xl font-bold bg-primary/10 text-primary hover:bg-primary/20 border-none transition-colors">
+                برند: کاله
+              </Badge>
+              <div className="flex items-center gap-1.5 text-amber-500 text-sm font-bold bg-amber-500/10 px-3 py-1.5 rounded-xl">
                 <Star className="w-4 h-4 fill-current" />
-                ۴.۴ (۱۲۰ دیدگاه)
+                ۴.۴ <span className="font-medium text-amber-600/80 dark:text-amber-400/80 text-xs">(۱۲۰ دیدگاه)</span>
               </div>
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold leading-tight mb-4">{product.title}</h1>
-            <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
-              این محصول با بهترین کیفیت و رعایت کامل اصول بهداشتی تهیه شده است. مناسب برای مصرف روزانه خانواده و سرشار از مواد مغذی.
-            </p>
+            </motion.div>
+            
+            <motion.h1 variants={fadeUp} className="text-3xl md:text-4xl font-black text-foreground leading-[1.3] tracking-tight">
+              {product.title}
+            </motion.h1>
+            
+            <motion.p variants={fadeUp} className="text-muted-foreground leading-relaxed text-base md:text-lg">
+              این محصول با بهترین کیفیت و رعایت کامل اصول بهداشتی تهیه شده است. مناسب برای مصرف روزانه خانواده و سرشار از مواد مغذی که انرژی روزانه شما را تامین می‌کند.
+            </motion.p>
           </div>
 
-          <div className="space-y-4 py-6 border-y">
-            <h3 className="font-semibold text-lg mb-4">ویژگی‌های محصول</h3>
+          <motion.div variants={fadeUp} className="space-y-5 py-6 border-y border-border/50">
+            <h3 className="font-bold text-xl flex items-center gap-2 text-foreground">
+              <CheckCircle2 className="w-6 h-6 text-primary" />
+              ویژگی‌های برجسته
+            </h3>
             <ul className="space-y-3">
-              <li className="flex items-center gap-4 text-sm">
-                <span className="text-muted-foreground w-24">وزن:</span>
-                <span className="font-medium">۱ کیلوگرم</span>
-              </li>
-              <li className="flex items-center gap-4 text-sm">
-                <span className="text-muted-foreground w-24">شماره پروانه:</span>
-                <span className="font-medium">۳۴/۱۰۲۳۹</span>
-              </li>
-              <li className="flex items-center gap-4 text-sm">
-                <span className="text-muted-foreground w-24">شرایط نگهداری:</span>
-                <span className="font-medium">در یخچال (دمای ۱ تا ۴ درجه)</span>
-              </li>
+              {[
+                { label: 'وزن', value: '۱ کیلوگرم' },
+                { label: 'شماره پروانه', value: '۳۴/۱۰۲۳۹' },
+                { label: 'شرایط نگهداری', value: 'در یخچال (دمای ۱ تا ۴ درجه)' }
+              ].map((item, idx) => (
+                <motion.li 
+                  key={idx}
+                  whileHover={{ x: -4 }}
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-secondary/30 hover:bg-secondary/60 transition-colors border border-transparent hover:border-border/50"
+                >
+                  <span className="text-muted-foreground font-medium text-sm">{item.label}</span>
+                  <span className="font-bold text-foreground">{item.value}</span>
+                </motion.li>
+              ))}
             </ul>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Buy Box */}
-        <div className="lg:col-span-3">
-          <div className="border rounded-3xl p-6 bg-card sticky top-24 shadow-sm">
-            <div className="space-y-6">
-              
+        {/* Buy Box - Glassmorphic floating card */}
+        <motion.div variants={slideInRight} className="lg:col-span-3 relative z-10">
+          <div className="sticky top-28 w-full rounded-[2.5rem] p-6 lg:p-8 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
+            
+            {/* Ambient background glow for the card */}
+            <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-b from-white/60 to-transparent dark:from-white/5 pointer-events-none" />
+
+            <div className="relative z-10 space-y-8">
               {/* Vendor */}
-              <div className="flex items-center justify-between pb-6 border-b">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                    <Store className="w-5 h-5" />
+              <div className="flex items-center justify-between pb-6 border-b border-border/50">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <Store className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold">فروشگاه ویزیکا</p>
-                    <p className="text-xs text-green-600 font-medium mt-1">عملکرد: عالی</p>
+                    <p className="text-base font-black text-foreground">فروشگاه ویزیکا</p>
+                    <div className="flex items-center gap-1.5 mt-1 text-emerald-500">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                      <p className="text-xs font-bold">آماده ارسال سریع</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Price */}
-              <div className="space-y-2">
+              <div className="space-y-2 pt-2">
                 {hasDiscount && (
-                  <div className="flex items-center justify-end gap-3">
-                    <span className="text-sm text-muted-foreground line-through decoration-destructive/50">
-                      {product.price.toLocaleString("fa-IR")}
-                    </span>
-                    <Badge variant="destructive" className="font-bold rounded-lg px-2">
+                  <div className="flex items-center justify-end gap-3 mb-1">
+                    <Badge variant="destructive" className="font-black rounded-xl px-2.5 py-1 text-xs animate-pulse shadow-lg shadow-red-500/20">
                       {discountPercent}٪ تخفیف
                     </Badge>
+                    <span className="text-base text-muted-foreground line-through decoration-destructive/60 decoration-2 font-bold">
+                      {product.price.toLocaleString("fa-IR")}
+                    </span>
                   </div>
                 )}
-                <div className="flex justify-end items-end gap-1">
-                  <span className="text-3xl font-bold text-foreground">
+                <div className="flex justify-end items-end gap-1.5">
+                  <span className="text-4xl lg:text-5xl font-black text-foreground tracking-tighter">
                     {(product.discountPrice || product.price).toLocaleString("fa-IR")}
                   </span>
-                  <span className="text-sm font-medium text-muted-foreground mb-1">تومان</span>
+                  <span className="text-sm font-bold text-muted-foreground mb-1.5">تومان</span>
                 </div>
               </div>
 
-              {/* Action */}
-              <Button onClick={() => toast.success('محصول با موفقیت به سبد خرید اضافه شد')} size="lg" className="w-full text-base font-bold rounded-xl h-14 shadow-md">
-                افزودن به سبد خرید
-              </Button>
+              {/* Action Button */}
+              <motion.div
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                className="pt-4"
+              >
+                <Button 
+                  onClick={() => toast.success('محصول با موفقیت به سبد خرید اضافه شد')} 
+                  size="lg" 
+                  className="w-full text-lg font-black rounded-[1.25rem] h-16 shadow-[0_15px_40px_-10px_rgba(var(--primary),0.6)] hover:shadow-[0_20px_50px_-10px_rgba(var(--primary),0.8)] transition-all bg-primary hover:bg-primary/90 text-primary-foreground relative overflow-hidden group border-b-4 border-primary/20 active:border-b-0 active:mt-1"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <ShoppingCart className="w-6 h-6" />
+                    افزودن به سبد خرید
+                  </span>
+                  {/* Subtle shine effect */}
+                  <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+                </Button>
+              </motion.div>
 
               {/* Guarantees */}
-              <div className="pt-6 space-y-4">
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <ShieldCheck className="w-5 h-5 text-primary" />
-                  <span>تضمین اصالت و کیفیت کالا</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <Truck className="w-5 h-5 text-primary" />
-                  <span>ارسال سریع (کمتر از ۲ ساعت)</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                  <RotateCcw className="w-5 h-5 text-primary" />
-                  <span>امکان مرجوعی در صورت خرابی</span>
-                </div>
+              <div className="pt-2 space-y-3">
+                {[
+                  { icon: ShieldCheck, text: 'تضمین اصالت کالا', color: 'text-blue-500', bg: 'bg-blue-500/10' },
+                  { icon: Truck, text: 'ارسال زیر ۲ ساعت', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+                  { icon: RotateCcw, text: 'مرجوعی تا ۷ روز', color: 'text-rose-500', bg: 'bg-rose-500/10' }
+                ].map((guarantee, idx) => (
+                  <motion.div 
+                    key={idx}
+                    whileHover={{ x: -4 }}
+                    className="flex items-center gap-3 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors group cursor-default"
+                  >
+                    <div className={`p-2.5 rounded-xl ${guarantee.bg} ${guarantee.color} transition-transform group-hover:scale-110`}>
+                      <guarantee.icon className="w-4 h-4" />
+                    </div>
+                    <span>{guarantee.text}</span>
+                  </motion.div>
+                ))}
               </div>
 
             </div>
           </div>
-        </div>
+        </motion.div>
 
-      </div>
+      </motion.div>
     </div>
   )
 }
