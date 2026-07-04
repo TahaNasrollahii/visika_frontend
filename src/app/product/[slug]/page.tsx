@@ -75,7 +75,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
       >
         
         {/* Product Gallery (Immersive) */}
-        <motion.div variants={fadeUp} className="lg:col-span-5 space-y-6">
+        <motion.div variants={fadeUp} className="lg:col-span-4 space-y-6">
           <div className="relative aspect-square rounded-[2rem] flex items-center justify-center p-8 overflow-hidden group shadow-sm bg-gradient-to-tr from-secondary/50 via-background to-secondary/30 border border-border/60">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -89,7 +89,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 src={product.image} 
                 alt={product.title} 
                 fill 
-                className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)]"
+                className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)] mix-blend-multiply dark:mix-blend-normal"
                 priority
               />
             </motion.div>
@@ -119,7 +119,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 className={`aspect-square rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 shadow-sm overflow-hidden relative ${i === 1 ? 'ring-2 ring-primary ring-offset-2 ring-offset-background bg-gradient-to-br from-primary/10 to-transparent' : 'bg-secondary/50 hover:bg-secondary/80 border border-transparent'}`}
               >
                 {i === 1 ? (
-                   <Image src={product.image} alt="thumbnail" fill className="object-contain p-2" />
+                   <Image src={product.image} alt="thumbnail" fill className="object-contain p-2 mix-blend-multiply dark:mix-blend-normal" />
                 ) : (
                   <ShoppingCart className="w-6 h-6 text-muted-foreground/30" />
                 )}
@@ -129,7 +129,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         </motion.div>
 
         {/* Product Info - Redesigned Layout */}
-        <motion.div variants={fadeUp} className="lg:col-span-4 flex flex-col justify-center space-y-8 lg:px-4">
+        <motion.div variants={fadeUp} className="lg:col-span-5 flex flex-col justify-center space-y-8 lg:px-4">
           <div className="space-y-5">
             <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3">
               <Badge variant="secondary" className="px-3 py-1.5 rounded-xl font-bold bg-primary/10 text-primary hover:bg-primary/20 border-none transition-colors">
@@ -141,17 +141,17 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               </div>
             </motion.div>
             
-            <motion.h1 variants={fadeUp} className="text-3xl md:text-4xl font-black text-foreground leading-[1.3] tracking-tight">
+            <motion.h1 variants={fadeUp} className="text-3xl md:text-4xl font-black text-foreground leading-[1.3] tracking-tight text-right w-full">
               {product.title}
             </motion.h1>
             
-            <motion.p variants={fadeUp} className="text-muted-foreground leading-relaxed text-base md:text-lg">
+            <motion.p variants={fadeUp} className="text-muted-foreground leading-relaxed text-base md:text-lg text-right w-full">
               این محصول با بهترین کیفیت و رعایت کامل اصول بهداشتی تهیه شده است. مناسب برای مصرف روزانه خانواده و سرشار از مواد مغذی که انرژی روزانه شما را تامین می‌کند.
             </motion.p>
           </div>
 
           <motion.div variants={fadeUp} className="space-y-5 py-6 border-y border-border/50">
-            <h3 className="font-bold text-xl flex items-center gap-2 text-foreground">
+            <h3 className="font-bold text-xl flex items-center gap-2 text-foreground text-right w-full">
               <CheckCircle2 className="w-6 h-6 text-primary" />
               ویژگی‌های برجسته
             </h3>
@@ -201,16 +201,16 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               {/* Price */}
               <div className="space-y-2 pt-2">
                 {hasDiscount && (
-                  <div className="flex items-center justify-end gap-3 mb-1">
-                    <Badge variant="destructive" className="font-black rounded-xl px-2.5 py-1 text-xs animate-pulse shadow-lg shadow-red-500/20">
-                      {discountPercent}٪ تخفیف
-                    </Badge>
+                  <div className="flex items-center justify-start gap-3 mb-1">
                     <span className="text-base text-muted-foreground line-through decoration-destructive/60 decoration-2 font-bold">
                       {product.price.toLocaleString("fa-IR")}
                     </span>
+                    <Badge variant="destructive" className="font-black rounded-xl px-2.5 py-1 text-xs animate-pulse shadow-lg shadow-red-500/20">
+                      {discountPercent}٪ تخفیف
+                    </Badge>
                   </div>
                 )}
-                <div className="flex justify-end items-end gap-1.5">
+                <div className="flex justify-start items-end gap-1.5">
                   <span className="text-4xl lg:text-5xl font-black text-foreground tracking-tighter">
                     {(product.discountPrice || product.price).toLocaleString("fa-IR")}
                   </span>
