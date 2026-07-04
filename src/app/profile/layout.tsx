@@ -1,13 +1,27 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { User, Package, Heart, MapPin, Bell, LogOut, ChevronLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
+import api from "@/lib/api"
 
 export default function ProfileLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const [user, setUser] = useState<{full_name?: string, phone_number?: string} | null>(null)
+
+  const fetchUser = () => {
+    api.get('/users/info/')
+      .then(res => setUser(res.data))
+      .catch(() => {})
+  }
+
+  useEffect(() => {
+    fetchUser()
+    window.addEventListener("user-updated", fetchUser)
+    return () => window.removeEventListener("user-updated", fetchUser)
+  }, [])
 
   const sidebarLinks = [
     { title: "اطلاعات حساب کاربری", href: "/profile", icon: User },
@@ -28,8 +42,8 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
               👤
             </div>
             <div>
-              <h2 className="font-bold text-lg">کاربر ویزیکا</h2>
-              <p className="text-sm text-muted-foreground mt-1">۰۹۱۲۳۴۵۶۷۸۹</p>
+              <h2 className="font-bold text-lg">{user?.full_name?.trim() ? user.full_name : "کاربر ویزیکا"}</h2>
+              <p className="text-sm text-muted-foreground mt-1" dir="ltr">{user?.phone_number || "..."}</p>
             </div>
           </div>
 

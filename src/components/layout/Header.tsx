@@ -12,41 +12,50 @@ export function Header() {
   const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false)
 
-  // Search state
   const [searchQuery, setSearchQuery] = useState("")
   const [cartCount, setCartCount] = useState(0)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState<{full_name?: string} | null>(null)
 
-  const fetchCartCount = async () => {
+  const fetchData = async () => {
     try {
-      const res = await api.get('/orders/cart/')
-      const items = res.data.items || []
+      // Run both requests in parallel
+      const [cartRes, userRes] = await Promise.all([
+        api.get('/orders/cart/'),
+        api.get('/users/info/')
+      ])
+      
+      const items = cartRes.data.items || []
       const totalQuantity = items.reduce((acc: number, item: any) => acc + item.quantity, 0)
       setCartCount(totalQuantity)
+      setUser(userRes.data)
       setIsLoggedIn(true)
     } catch {
       setCartCount(0)
+      setUser(null)
       setIsLoggedIn(false)
     }
   }
 
   // Add scroll event listener for sticky header styling (glassmorphism)
   React.useEffect(() => {
-    fetchCartCount()
+    fetchData()
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
     
-    // Listen for custom event to update cart
-    const handleCartUpdate = () => fetchCartCount()
+    // Listen for custom event to update cart and user info
+    const handleUpdate = () => fetchData()
 
     window.addEventListener("scroll", handleScroll)
-    window.addEventListener("cart-updated", handleCartUpdate)
+    window.addEventListener("cart-updated", handleUpdate)
+    window.addEventListener("user-updated", handleUpdate)
     
     return () => {
       window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("cart-updated", handleCartUpdate)
+      window.removeEventListener("cart-updated", handleUpdate)
+      window.removeEventListener("user-updated", handleUpdate)
     }
   }, [])
 
@@ -204,7 +213,7 @@ export function Header() {
               <Link href="/profile" tabIndex={-1}>
                 <Button variant="ghost" className="gap-2 text-foreground/80 hover:text-foreground font-semibold text-sm px-3 hover:bg-secondary/80 h-11 rounded-xl">
                   <User className="w-[22px] h-[22px]" />
-                  حساب کاربری
+                  {user?.full_name?.trim() ? user.full_name : "حساب کاربری"}
                 </Button>
               </Link>
             )}

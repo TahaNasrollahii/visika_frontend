@@ -35,9 +35,9 @@ export default function ProfileInfoPage() {
         setFormData({
           firstName: res.data.first_name || "",
           lastName: res.data.last_name || "",
-          nationalId: "",
-          email: "",
-          birthDate: ""
+          nationalId: res.data.national_id || "",
+          email: res.data.email || "",
+          birthDate: res.data.birth_date || ""
         })
         setLoading(false)
       })
@@ -47,10 +47,21 @@ export default function ProfileInfoPage() {
       })
   }, [router])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Backend doesn't have profile update API yet, so we mock success
-    toast.success("اطلاعات کاربری با موفقیت بروزرسانی شد")
+    try {
+      await api.patch('/users/info/', {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        national_id: formData.nationalId,
+        email: formData.email,
+        birth_date: formData.birthDate
+      })
+      toast.success("اطلاعات کاربری با موفقیت بروزرسانی شد")
+      window.dispatchEvent(new Event("user-updated"))
+    } catch (err) {
+      toast.error("خطا در بروزرسانی اطلاعات")
+    }
   }
 
   if (loading) return <div>در حال بارگذاری...</div>
