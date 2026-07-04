@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation"
 export function Header() {
   const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false)
-  
+
   // Search state
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -32,11 +32,10 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b shadow-sm"
-          : "bg-background border-b"
-      }`}
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled
+        ? "bg-background/80 backdrop-blur-md border-b shadow-sm"
+        : "bg-background border-b"
+        }`}
     >
       {/* Top Banner (Optional for promos) */}
       <div className="bg-primary text-primary-foreground py-1.5 text-xs text-center font-medium">
@@ -46,9 +45,9 @@ export function Header() {
       <div className="container mx-auto px-4 lg:px-8 pb-3 md:pb-0">
         {/* Desktop: Single Row. Mobile: Two Rows (Top Nav + Search) */}
         <div className="flex flex-col md:flex-row md:h-[88px] justify-center md:items-center justify-between gap-3 md:gap-4 pt-3 md:pt-0">
-          
+
           {/* Mobile Top Row */}
-          <div className="flex items-center justify-between w-full md:w-auto">
+          <div className="flex items-center justify-between w-full md:w-auto md:gap-6">
             {/* Right Section: Logo */}
             <Link href="/" className="flex items-center gap-2 md:gap-3">
               <div className="w-10 h-10 md:w-[42px] md:h-[42px] bg-primary rounded-full flex items-center justify-center shadow-sm">
@@ -59,86 +58,24 @@ export function Header() {
                   ویزیکا
                 </span>
                 <span className="text-[10px] md:text-[11px] text-muted-foreground font-medium hidden md:block">
-                  فروشگاه هوشمند
+                  ویزیتور هوشمند
                 </span>
               </div>
             </Link>
 
-            {/* Mobile Actions (Hidden on Desktop) */}
-            <div className="flex md:hidden items-center gap-1">
-              <Link href="/login" tabIndex={-1}>
-                <Button variant="ghost" size="icon" className="text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
-                  <User className="w-[22px] h-[22px]" />
-                </Button>
-              </Link>
-              <Link href="/cart" tabIndex={-1}>
-                <Button variant="ghost" size="icon" className="relative text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
-                  <ShoppingBag className="w-[22px] h-[22px]" />
-                  <div className="absolute top-1.5 right-1.5 bg-primary text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-background">
-                    ۱
-                  </div>
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Middle Section: Search Bar (Full width on mobile, flexible on desktop) */}
-          <div className="flex-1 w-full md:max-w-3xl md:mx-6">
-            <form onSubmit={handleSearch} className="relative w-full group flex items-center">
-              <Search 
-                strokeWidth={1.5}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-[20px] h-[20px] md:w-[22px] md:h-[22px] text-muted-foreground group-focus-within:text-primary transition-colors" 
-              />
-              <Input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="جست‌وجو در بین بیش از ۱۰,۰۰۰ محصول..."
-                className="w-full pr-11 md:pr-[46px] pl-4 md:pl-[70px] h-12 md:h-[48px] rounded-full border-none md:border-solid border-input bg-secondary/60 md:bg-background focus-visible:ring-1 focus-visible:ring-primary shadow-none text-[13px] md:text-[13.5px] font-medium placeholder:text-muted-foreground/70"
-              />
-              <div className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[11px] font-medium px-3 py-1.5 rounded-xl">
-                Ctrl K
-              </div>
-            </form>
-          </div>
-
-          {/* Desktop Left Section: Actions (Hidden on Mobile) */}
-          <div className="hidden md:flex items-center gap-2 md:gap-5 shrink-0">
-            <Link href="/login" tabIndex={-1}>
-              <Button variant="ghost" className="gap-2 text-foreground/80 hover:text-foreground font-semibold text-sm px-3 hover:bg-secondary/80 h-11 rounded-xl">
-                <User className="w-[22px] h-[22px]" />
-                حساب کاربری
-              </Button>
-            </Link>
-
-            <Link href="/cart" tabIndex={-1}>
-              <Button className="h-[46px] px-5 rounded-full gap-2 font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all flex items-center text-sm">
-                <ShoppingBag className="w-5 h-5" />
-                <span>سبد خرید</span>
-                <div className="bg-white/20 text-white w-6 h-6 rounded-full flex items-center justify-center text-[13px] pt-[2px] ml-1">
-                  ۱
-                </div>
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Bottom Nav / Categories Menu (Desktop) */}
-        <div className="hidden lg:flex items-center justify-between h-14 text-sm font-medium text-muted-foreground border-t mt-2">
-          
-          <div className="flex items-center gap-6 h-full">
-            <div className="relative group h-full flex items-center">
+            {/* Categories Menu */}
+            <div className="hidden md:flex relative group items-center">
               <Link href="/categories" tabIndex={-1}>
                 <Button variant="ghost" className="gap-2 font-bold text-foreground hover:bg-secondary rounded-lg px-3">
                   <LayoutGrid className="w-5 h-5" />
-                  همه دسته‌بندی‌ها
+                  دسته‌بندی‌ها
                 </Button>
               </Link>
 
               {/* Mega Menu Dropdown */}
-              <div className="absolute top-full right-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 w-[650px] z-50">
+              <div className="absolute top-full right-0 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 w-[650px] z-50">
                 <div className="bg-background border rounded-3xl shadow-xl overflow-hidden p-6 flex flex-col gap-6">
-                  
+
                   {/* Categories Columns */}
                   <div className="grid grid-cols-3 gap-8">
                     {/* Column 1 */}
@@ -198,6 +135,66 @@ export function Header() {
               </div>
             </div>
 
+            {/* Mobile Actions (Hidden on Desktop) */}
+            <div className="flex md:hidden items-center gap-1">
+              <Link href="/login" tabIndex={-1}>
+                <Button variant="ghost" size="icon" className="text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
+                  <User className="w-[22px] h-[22px]" />
+                </Button>
+              </Link>
+              <Link href="/cart" tabIndex={-1}>
+                <Button variant="ghost" size="icon" className="relative text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
+                  <ShoppingBag className="w-[22px] h-[22px]" />
+                  <div className="absolute top-1.5 right-1.5 bg-primary text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-background">
+                    ۱
+                  </div>
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Middle Section: Search Bar (Full width on mobile, flexible on desktop) */}
+          <div className="flex-1 w-full md:max-w-3xl md:mx-6">
+            <form onSubmit={handleSearch} className="relative w-full group flex items-center">
+              <Search
+                strokeWidth={1.5}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-[20px] h-[20px] md:w-[22px] md:h-[22px] text-muted-foreground group-focus-within:text-primary transition-colors"
+              />
+              <Input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="جست‌وجو در بین بیش از ۱۰,۰۰۰ محصول..."
+                className="w-full pr-11 md:pr-[46px] pl-4 md:pl-6 h-12 md:h-[48px] rounded-full border-none md:border-solid border-input bg-secondary/60 md:bg-background focus-visible:ring-1 focus-visible:ring-primary shadow-none text-[13px] md:text-[13.5px] font-medium placeholder:text-muted-foreground/70"
+              />
+            </form>
+          </div>
+
+          {/* Desktop Left Section: Actions (Hidden on Mobile) */}
+          <div className="hidden md:flex items-center gap-2 md:gap-5 shrink-0">
+            <Link href="/login" tabIndex={-1}>
+              <Button variant="ghost" className="gap-2 text-foreground/80 hover:text-foreground font-semibold text-sm px-3 hover:bg-secondary/80 h-11 rounded-xl">
+                <User className="w-[22px] h-[22px]" />
+                حساب کاربری
+              </Button>
+            </Link>
+
+            <Link href="/cart" tabIndex={-1}>
+              <Button className="h-[46px] px-5 rounded-full gap-2 font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all flex items-center text-sm">
+                <ShoppingBag className="w-5 h-5" />
+                <span>سبد خرید</span>
+                <div className="bg-white/20 text-white w-6 h-6 rounded-full flex items-center justify-center text-[13px] pt-[2px] ml-1">
+                  ۱
+                </div>
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom Nav / Categories Menu (Desktop) */}
+        <div className="hidden lg:flex items-center justify-between h-14 text-sm font-medium text-muted-foreground border-t mt-2">
+
+          <div className="flex items-center gap-6 h-full">
             {/* Links */}
             <Link href="/" className="text-primary border-b-2 border-primary py-4 font-bold">خانه</Link>
             <Link href="/categories/fruits" className="hover:text-foreground py-4 transition-colors">میوه و سبزیجات</Link>

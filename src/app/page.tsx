@@ -42,8 +42,8 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
           {categories.map((cat) => (
-            <Link 
-              key={cat.id} 
+            <Link
+              key={cat.id}
               href={`/categories/${cat.id}`}
               className="group flex flex-col items-center gap-3 text-center"
             >
@@ -69,12 +69,12 @@ export default function Home() {
             {/* Background Decorations */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-200/50 rounded-full blur-2xl group-hover:bg-red-300/50 transition-colors duration-500"></div>
             <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-rose-200/50 rounded-full blur-2xl group-hover:bg-rose-300/50 transition-colors duration-500"></div>
-            
+
             <div className="space-y-1.5 md:space-y-2 z-10">
-              <h3 className="text-lg md:text-xl font-extrabold text-red-950">خرید محصولات <br className="hidden sm:block"/> پروتئینی تازه</h3>
+              <h3 className="text-lg md:text-xl font-extrabold text-red-950">خرید محصولات <br className="hidden sm:block" /> پروتئینی تازه</h3>
               <p className="text-xs md:text-sm font-medium text-red-800/80">با تضمین کیفیت و بهداشت</p>
             </div>
-            
+
             <div className="relative z-10">
               <div className="absolute inset-0 bg-white/40 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="text-5xl md:text-6xl drop-shadow-md group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 ease-out">🥩</div>
@@ -86,12 +86,12 @@ export default function Home() {
             {/* Background Decorations */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-200/50 rounded-full blur-2xl group-hover:bg-orange-300/50 transition-colors duration-500"></div>
             <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-amber-200/50 rounded-full blur-2xl group-hover:bg-amber-300/50 transition-colors duration-500"></div>
-            
+
             <div className="space-y-1.5 md:space-y-2 z-10">
-              <h3 className="text-lg md:text-xl font-extrabold text-orange-950">نوشیدنی‌های <br className="hidden sm:block"/> خنک تابستانی</h3>
+              <h3 className="text-lg md:text-xl font-extrabold text-orange-950">نوشیدنی‌های <br className="hidden sm:block" /> خنک تابستانی</h3>
               <p className="text-xs md:text-sm font-bold text-orange-600 bg-orange-100/50 w-fit px-2 py-0.5 rounded-md">تا ۲۰٪ تخفیف</p>
             </div>
-            
+
             <div className="relative z-10">
               <div className="absolute inset-0 bg-white/40 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="text-5xl md:text-6xl drop-shadow-md group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 ease-out">🍹</div>
