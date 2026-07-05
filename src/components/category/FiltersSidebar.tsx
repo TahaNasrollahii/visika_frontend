@@ -129,7 +129,9 @@ export function FiltersSidebar({ brands = [], categories = [], activeCategorySlu
   }
 
   const clearAllFilters = () => {
-    router.push(pathname)
+    setLocalMinPrice('0')
+    setLocalMaxPrice('10000000')
+    router.replace(pathname, { scroll: false })
   }
 
   return (
