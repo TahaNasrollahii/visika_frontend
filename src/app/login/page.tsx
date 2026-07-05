@@ -21,7 +21,7 @@ export default function LoginPage() {
     if (phone.length === 11) {
       setLoading(true)
       try {
-        await api.post('/users/otp/request/', { phone_number: phone })
+        await api.post('/users/otp/request', { phone_number: phone })
         setStep(2)
         toast.success("کد تایید با موفقیت ارسال شد")
       } catch (err) {
@@ -37,7 +37,7 @@ export default function LoginPage() {
     if (otp.length === 4) {
       setLoading(true)
       try {
-        await api.post('/users/otp/login/', { phone_number: phone, otp })
+        await api.post('/users/otp/login', { phone_number: phone, otp })
         toast.success("ورود موفقیت‌آمیز")
         window.dispatchEvent(new Event("user-updated"))
         window.dispatchEvent(new Event("cart-updated"))

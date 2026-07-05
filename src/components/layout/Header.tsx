@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api"
+import { useCategories } from "@/hooks/useCategories"
 
 export function Header() {
   const router = useRouter()
@@ -15,24 +16,24 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("")
   const [cartCount, setCartCount] = useState(0)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [user, setUser] = useState<{full_name?: string} | null>(null)
-  const [categories, setCategories] = useState<any[]>([])
+  const [user, setUser] = useState<{ full_name?: string } | null>(null)
+
+  // Categories are fetched independently of the user session so the menu works
+  // whether or not the visitor is logged in, with its own loading/error states.
+  const {
+    categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+    refetch: refetchCategories,
+  } = useCategories()
 
   const fetchData = async () => {
     try {
-      // Fetch categories independently so it doesn't fail if user is not logged in
-      const catRes = await api.get('/products/categories/')
-      setCategories(catRes.data || [])
-    } catch {
-      setCategories([])
-    }
-
-    try {
       const [cartRes, userRes] = await Promise.all([
-        api.get('/orders/cart/'),
-        api.get('/users/info/')
+        api.get('/orders/cart'),
+        api.get('/users/info')
       ])
-      
+
       const items = cartRes.data.items || []
       const totalQuantity = items.reduce((acc: number, item: any) => acc + item.quantity, 0)
       setCartCount(totalQuantity)
@@ -47,7 +48,7 @@ export function Header() {
 
   const handleLogout = async () => {
     try {
-      await api.post('/users/logout/')
+      await api.post('/users/logout')
       setIsLoggedIn(false)
       setUser(null)
       setCartCount(0)
@@ -66,14 +67,14 @@ export function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
-    
+
     // Listen for custom event to update cart and user info
     const handleUpdate = () => fetchData()
 
     window.addEventListener("scroll", handleScroll)
     window.addEventListener("cart-updated", handleUpdate)
     window.addEventListener("user-updated", handleUpdate)
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("cart-updated", handleUpdate)
@@ -132,18 +133,54 @@ export function Header() {
                 <div className="bg-background border rounded-3xl shadow-xl overflow-hidden p-6 flex flex-col gap-6">
 
                   {/* Categories Columns */}
-                  <div className="grid grid-cols-3 gap-6">
-                    {categories.slice(0, 9).map((cat) => (
-                      <div key={cat.id} className="flex flex-col gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors">
-                        <Link href={`/categories/${cat.slug}`} className="font-bold text-foreground flex items-center gap-3 hover:text-primary transition-colors">
-                          <span className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-sm ${cat.color}`}>
-                            {cat.icon}
-                          </span>
-                          {cat.title}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
+                  {categoriesLoading ? (
+                    // Loading skeleton
+                    <div className="grid grid-cols-3 gap-6">
+                      {Array.from({ length: 9 }).map((_, i) => (
+                        <div key={i} className="flex items-center gap-3 p-2">
+                          <span className="w-10 h-10 rounded-lg bg-secondary animate-pulse shrink-0" />
+                          <span className="h-4 flex-1 rounded bg-secondary animate-pulse" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : categoriesError ? (
+                    // Error state with retry
+                    <div className="flex flex-col items-center gap-3 py-8 text-center">
+                      <p className="text-sm text-muted-foreground">خطا در دریافت دسته‌بندی‌ها</p>
+                      <Button size="sm" variant="outline" onClick={() => refetchCategories()} className="rounded-lg">
+                        تلاش مجدد
+                      </Button>
+                    </div>
+                  ) : categories.length === 0 ? (
+                    // Empty state
+                    <div className="py-8 text-center text-sm text-muted-foreground">
+                      دسته‌بندی‌ای برای نمایش وجود ندارد
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-3 gap-6 max-h-[65vh] overflow-y-auto scrollbar-hide">
+                      {categories.map((cat) => (
+                        <div key={cat.id} className="flex flex-col gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors">
+                          <Link href={`/categories/${cat.slug}`} className="font-bold text-foreground flex items-center gap-3 hover:text-primary transition-colors">
+                            <span className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-sm ${cat.color || "bg-secondary"}`}>
+                              {cat.icon}
+                            </span>
+                            {cat.title}
+                          </Link>
+
+                          {/* Nested sub-categories, rendered only if the backend provides them */}
+                          {cat.children && cat.children.length > 0 && (
+                            <div className="flex flex-col gap-1.5 pr-[52px] text-[13px] text-muted-foreground">
+                              {cat.children.map((child) => (
+                                <Link key={child.id} href={`/categories/${child.slug}`} className="hover:text-foreground transition-colors">
+                                  {child.title}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Promotional Banner */}
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-4 flex items-center justify-between">

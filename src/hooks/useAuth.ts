@@ -4,13 +4,20 @@ import api from "@/lib/api"
 let cachedUser: any = null
 let userPromise: Promise<any> | null = null
 
+if (typeof window !== 'undefined') {
+  window.addEventListener("user-updated", () => {
+    cachedUser = null
+    userPromise = null
+  })
+}
+
 export function useAuth() {
   const [user, setUser] = useState<any>(cachedUser)
   const [loading, setLoading] = useState(!cachedUser)
 
   const fetchUser = () => {
     if (!userPromise) {
-      userPromise = api.get('/users/info/').then(res => {
+      userPromise = api.get('/users/info').then(res => {
         cachedUser = res.data
         return res.data
       }).catch(() => {
@@ -34,8 +41,6 @@ export function useAuth() {
     fetchUser()
 
     const handleUpdate = () => {
-      cachedUser = null
-      userPromise = null
       setLoading(true)
       fetchUser()
     }

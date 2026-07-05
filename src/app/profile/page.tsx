@@ -19,7 +19,7 @@ export default function ProfileInfoPage() {
   const router = useRouter()
 
   useEffect(() => {
-    api.get('/users/info/')
+    api.get('/users/info')
       .then(res => {
         setPhone(res.data.phone_number)
         setFormData({
@@ -39,7 +39,7 @@ export default function ProfileInfoPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await api.patch('/users/info/', {
+      await api.patch('/users/info', {
         first_name: formData.firstName,
         last_name: formData.lastName,
         national_id: formData.nationalId,

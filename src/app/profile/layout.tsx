@@ -14,7 +14,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const fetchUser = () => {
-    api.get('/users/info/')
+    api.get('/users/info')
       .then(res => setUser(res.data))
       .catch(() => {})
   }
@@ -35,7 +35,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
 
   const handleLogout = async () => {
     try {
-      await api.post('/users/logout/')
+      await api.post('/users/logout')
       window.dispatchEvent(new Event("user-updated"))
       window.dispatchEvent(new Event("cart-updated"))
       window.location.href = '/login' // Force full navigation to clear state
@@ -57,7 +57,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
 
     setUploading(true)
     try {
-      const res = await api.patch('/users/info/', formData, {
+      const res = await api.patch('/users/info', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -15,14 +15,3 @@ export const hotOffers: Product[] = [
   { id: "9", title: "برنج طارم هاشمی گلستان 5 کیلویی", price: 750000, discountPrice: 680000, image: "/products/Gemini_Generated_Image_crjfk1crjfk1crjf.png" },
   { id: "10", title: "چای سیلان محمود 500 گرمی", price: 210000, discountPrice: 165000, image: "/products/Gemini_Generated_Image_oxu981oxu981oxu9.png" },
 ]
-
-export const categories = [
-  { id: "dairy", title: "لبنیات", icon: "🥛", color: "bg-blue-100 text-blue-600" },
-  { id: "meat", title: "گوشت و مرغ", icon: "🥩", color: "bg-red-100 text-red-600" },
-  { id: "fruits", title: "میوه و سبزیجات", icon: "🍎", color: "bg-green-100 text-green-600" },
-  { id: "drinks", title: "نوشیدنی‌ها", icon: "🥤", color: "bg-orange-100 text-orange-600" },
-  { id: "snacks", title: "تنقلات", icon: "🍿", color: "bg-yellow-100 text-yellow-600" },
-  { id: "cleaning", title: "شوینده و بهداشتی", icon: "🧼", color: "bg-teal-100 text-teal-600" },
-  { id: "pantry", title: "خواربار", icon: "🍚", color: "bg-amber-100 text-amber-600" },
-  { id: "frozen", title: "مواد منجمد", icon: "❄️", color: "bg-cyan-100 text-cyan-600" },
-]

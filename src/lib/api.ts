@@ -6,7 +6,22 @@ const api = axios.create({
   withCredentials: true,
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: 'X-CSRFToken',
+  headers: {
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  }
 });
+
+api.interceptors.request.use((config) => {
+  if (config.method === 'get') {
+    config.params = {
+      ...config.params,
+      _t: Date.now(),
+    }
+  }
+  return config
+})
 
 api.interceptors.response.use(
   (response) => response,

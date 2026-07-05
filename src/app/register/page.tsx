@@ -27,7 +27,7 @@ export default function RegisterPage() {
     if (phone.length === 11) {
       setLoading(true)
       try {
-        await api.post('/users/otp/request/', { phone_number: phone })
+        await api.post('/users/otp/request', { phone_number: phone })
         setStep(2)
         toast.success("کد تایید با موفقیت ارسال شد")
       } catch (err) {
@@ -43,7 +43,7 @@ export default function RegisterPage() {
     if (otp.length === 4) {
       setLoading(true)
       try {
-        await api.post('/users/otp/register/', { 
+        await api.post('/users/otp/register', { 
           phone_number: phone, 
           otp,
           first_name: firstName,

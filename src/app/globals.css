@@ -2,6 +2,15 @@
 
 @plugin "tailwindcss-animate";
 
+/*
+ * Category colors are stored in the database as Tailwind class strings
+ * (e.g. "bg-blue-100 text-blue-600") and applied dynamically at runtime, so
+ * Tailwind's source scanner never sees them literally and would purge them.
+ * Safelist the full palette used for category icons so they render everywhere
+ * (header mega-menu, /categories, /categories/[slug]).
+ */
+@source inline("{bg,text}-{blue,red,purple,cyan,green,yellow,orange,teal,amber}-{100,600}");
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
