@@ -20,11 +20,17 @@ export function Header() {
 
   const fetchData = async () => {
     try {
-      // Run both requests in parallel
-      const [cartRes, userRes, catRes] = await Promise.all([
+      // Fetch categories independently so it doesn't fail if user is not logged in
+      const catRes = await api.get('/products/categories/')
+      setCategories(catRes.data || [])
+    } catch {
+      setCategories([])
+    }
+
+    try {
+      const [cartRes, userRes] = await Promise.all([
         api.get('/orders/cart/'),
-        api.get('/users/info/'),
-        api.get('/products/categories/')
+        api.get('/users/info/')
       ])
       
       const items = cartRes.data.items || []
@@ -32,7 +38,6 @@ export function Header() {
       setCartCount(totalQuantity)
       setUser(userRes.data)
       setIsLoggedIn(true)
-      setCategories(catRes.data || [])
     } catch {
       setCartCount(0)
       setUser(null)
@@ -130,7 +135,7 @@ export function Header() {
                   <div className="grid grid-cols-3 gap-6">
                     {categories.slice(0, 9).map((cat) => (
                       <div key={cat.id} className="flex flex-col gap-2 p-2 rounded-xl hover:bg-secondary/50 transition-colors">
-                        <Link href={`/categories/${cat.id}`} className="font-bold text-foreground flex items-center gap-3 hover:text-primary transition-colors">
+                        <Link href={`/categories/${cat.slug}`} className="font-bold text-foreground flex items-center gap-3 hover:text-primary transition-colors">
                           <span className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-sm ${cat.color}`}>
                             {cat.icon}
                           </span>

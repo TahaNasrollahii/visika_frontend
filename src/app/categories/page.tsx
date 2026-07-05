@@ -18,7 +18,7 @@ export default async function CategoriesPage() {
         {categories.map((category) => (
           <Link 
             key={category.id} 
-            href={`/categories/${category.id}`}
+            href={`/categories/${category.slug}`}
             className="group flex items-center justify-between p-6 bg-secondary/30 hover:bg-secondary rounded-2xl border transition-colors"
           >
             <div className="flex items-center gap-4">

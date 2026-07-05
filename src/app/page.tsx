@@ -44,7 +44,7 @@ export default async function Home() {
           {categories.map((cat) => (
             <Link
               key={cat.id}
-              href={`/categories/${cat.id}`}
+              href={`/categories/${cat.slug}`}
               className="group flex flex-col items-center gap-3 text-center"
             >
               <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-transform group-hover:-translate-y-1 group-hover:shadow-md ${cat.color}`}>
