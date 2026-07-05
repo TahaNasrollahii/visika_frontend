@@ -28,8 +28,8 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   const sidebarLinks = [
     { title: "اطلاعات حساب کاربری", href: "/profile", icon: User },
     { title: "سفارش‌های من", href: "/profile/orders", icon: Package },
-    { title: "لیست علاقه‌مندی‌ها", href: "/profile/favorites", icon: Heart },
     { title: "آدرس‌های من", href: "/profile/addresses", icon: MapPin },
+    { title: "لیست علاقه‌مندی‌ها", href: "/profile/favorites", icon: Heart },
     { title: "پیام‌ها و اعلان‌ها", href: "/profile/notifications", icon: Bell },
   ]
 
