@@ -27,7 +27,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const [isFavorite, setIsFavorite] = useState(product.is_favorite || false)
   const [addingToCart, setAddingToCart] = useState(false)
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
 
   const hasDiscount = product.discountPrice && product.discountPrice < product.price
   const discountPercent = hasDiscount
@@ -64,8 +64,12 @@ export function ProductCard({ product }: ProductCardProps) {
   const addToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (user?.status === 1) {
-      toast.error('حساب کاربری شما باید ابتدا توسط مدیران بررسی و فعال شود')
+    if (!user || user.status === 1) {
+      toast.error(
+        !user 
+          ? 'ابتدا وارد حساب کاربری خود شوید'
+          : 'حساب کاربری شما باید ابتدا توسط مدیران بررسی و فعال شود'
+      )
       return
     }
     setAddingToCart(true)
@@ -127,9 +131,13 @@ export function ProductCard({ product }: ProductCardProps) {
         
         <div className="flex items-end justify-between mt-2">
           <div className="flex flex-col">
-            {user?.status === 1 ? (
+            {authLoading ? (
+              <span className="text-xs font-bold text-muted-foreground bg-secondary/50 px-2 py-1 rounded-lg animate-pulse">
+                در حال بارگذاری...
+              </span>
+            ) : !user || user.status === 1 ? (
               <span className="text-xs font-bold text-muted-foreground bg-secondary/50 px-2 py-1 rounded-lg">
-                نیازمند تایید حساب
+                {!user ? 'برای مشاهده قیمت وارد شوید' : 'نیازمند تایید حساب'}
               </span>
             ) : (
               <>

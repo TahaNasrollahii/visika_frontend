@@ -40,7 +40,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [addingToCart, setAddingToCart] = useState(false)
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
 
   useEffect(() => {
     api.get(`/products/products/${resolvedParams.slug}/`)
@@ -230,10 +230,16 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
               {/* Price */}
               <div className="space-y-2 pt-2">
-                {user?.status === 1 ? (
+                {authLoading ? (
+                  <div className="flex items-center justify-start py-4">
+                    <span className="text-sm font-bold text-muted-foreground bg-secondary/50 px-3 py-2 rounded-xl animate-pulse">
+                      در حال بارگذاری...
+                    </span>
+                  </div>
+                ) : !user || user.status === 1 ? (
                   <div className="flex items-center justify-start py-4">
                     <span className="text-sm font-bold text-muted-foreground bg-secondary/50 px-3 py-2 rounded-xl">
-                      برای مشاهده قیمت نیازمند تایید حساب هستید
+                      {!user ? 'برای مشاهده قیمت وارد حساب شوید' : 'برای مشاهده قیمت نیازمند تایید حساب هستید'}
                     </span>
                   </div>
                 ) : (
@@ -266,8 +272,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               >
                 <Button 
                   onClick={async () => {
-                    if (user?.status === 1) {
-                      toast.error('حساب کاربری شما باید ابتدا توسط مدیران بررسی و فعال شود')
+                    if (!user || user.status === 1) {
+                      toast.error(
+                        !user 
+                          ? 'ابتدا وارد حساب کاربری خود شوید'
+                          : 'حساب کاربری شما باید ابتدا توسط مدیران بررسی و فعال شود'
+                      )
                       return
                     }
                     setAddingToCart(true)
