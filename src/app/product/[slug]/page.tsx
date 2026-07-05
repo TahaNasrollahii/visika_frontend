@@ -5,7 +5,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { ShoppingCart, Heart, Share2, ShieldCheck, Truck, RotateCcw, Store, Star, ChevronLeft, CheckCircle2 } from "lucide-react"
+import { Heart, Share2, ShieldCheck, Truck, RotateCcw, Store, Star, ChevronLeft, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
@@ -87,8 +87,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10"
       >
         
-        {/* Product Gallery (Immersive) */}
-        <motion.div variants={fadeUp} className="lg:col-span-4 space-y-6">
+        {/* Product Gallery */}
+        <motion.div variants={fadeUp} className="lg:col-span-4">
           <div className="relative aspect-square rounded-[2rem] flex items-center justify-center p-8 overflow-hidden group shadow-sm bg-gradient-to-tr from-secondary/50 via-background to-secondary/30 border border-border/60">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -137,24 +137,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 </Button>
               </motion.div>
             </div>
-          </div>
-          
-          {/* Interactive Thumbnails */}
-          <div className="grid grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <motion.div 
-                key={i} 
-                whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.95 }}
-                className={`aspect-square rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 shadow-sm overflow-hidden relative ${i === 1 ? 'ring-2 ring-primary ring-offset-2 ring-offset-background bg-gradient-to-br from-primary/10 to-transparent' : 'bg-secondary/50 hover:bg-secondary/80 border border-transparent'}`}
-              >
-                {i === 1 ? (
-                   <Image src={product.image} alt="thumbnail" fill className="object-contain p-2 mix-blend-multiply dark:mix-blend-normal" />
-                ) : (
-                  <ShoppingCart className="w-6 h-6 text-muted-foreground/30" />
-                )}
-              </motion.div>
-            ))}
           </div>
         </motion.div>
 
