@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import api from "@/lib/api"
+import { useAuth } from "@/hooks/useAuth"
 
 export interface Product {
   id: string
@@ -26,6 +27,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const [isFavorite, setIsFavorite] = useState(product.is_favorite || false)
   const [addingToCart, setAddingToCart] = useState(false)
+  const { user } = useAuth()
 
   const hasDiscount = product.discountPrice && product.discountPrice < product.price
   const discountPercent = hasDiscount
@@ -62,6 +64,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const addToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    if (user?.status === 1) {
+      toast.error('حساب کاربری شما باید ابتدا توسط مدیران بررسی و فعال شود')
+      return
+    }
     setAddingToCart(true)
     try {
       await api.post('/orders/cart/items/', { product_id: product.id, quantity: 1 })
@@ -121,15 +127,23 @@ export function ProductCard({ product }: ProductCardProps) {
         
         <div className="flex items-end justify-between mt-2">
           <div className="flex flex-col">
-            {hasDiscount && (
-              <span className="text-xs text-muted-foreground line-through decoration-destructive/50">
-                {product.price.toLocaleString("fa-IR")} تومان
+            {user?.status === 1 ? (
+              <span className="text-xs font-bold text-muted-foreground bg-secondary/50 px-2 py-1 rounded-lg">
+                نیازمند تایید حساب
               </span>
+            ) : (
+              <>
+                {hasDiscount && (
+                  <span className="text-xs text-muted-foreground line-through decoration-destructive/50">
+                    {product.price.toLocaleString("fa-IR")} تومان
+                  </span>
+                )}
+                <span className="font-bold text-lg text-foreground flex items-center gap-1">
+                  {(product.discountPrice || product.price).toLocaleString("fa-IR")}
+                  <span className="text-[10px] font-normal text-muted-foreground">تومان</span>
+                </span>
+              </>
             )}
-            <span className="font-bold text-lg text-foreground flex items-center gap-1">
-              {(product.discountPrice || product.price).toLocaleString("fa-IR")}
-              <span className="text-[10px] font-normal text-muted-foreground">تومان</span>
-            </span>
           </div>
           
           <Button 

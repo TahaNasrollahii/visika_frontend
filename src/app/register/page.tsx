@@ -9,15 +9,21 @@ import api from "@/lib/api"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [step, setStep] = useState<1 | 2>(1)
   const [phone, setPhone] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [otp, setOtp] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!firstName.trim() || !lastName.trim()) {
+      toast.error("لطفا نام و نام خانوادگی خود را وارد کنید")
+      return
+    }
     if (phone.length === 11) {
       setLoading(true)
       try {
@@ -37,17 +43,22 @@ export default function LoginPage() {
     if (otp.length === 4) {
       setLoading(true)
       try {
-        await api.post('/users/otp/login/', { phone_number: phone, otp })
-        toast.success("ورود موفقیت‌آمیز")
+        await api.post('/users/otp/register/', { 
+          phone_number: phone, 
+          otp,
+          first_name: firstName,
+          last_name: lastName
+        })
+        toast.success("ثبت‌نام با موفقیت انجام شد")
         window.dispatchEvent(new Event("user-updated"))
         window.dispatchEvent(new Event("cart-updated"))
         router.push('/profile')
       } catch (err: any) {
-        if (err.response?.status === 404) {
-          toast.error("کاربری با این شماره یافت نشد. لطفا ثبت‌نام کنید")
-          router.push('/register')
+        if (err.response?.data?.phone_number) {
+           toast.error("این شماره قبلا ثبت‌نام کرده است. لطفا وارد شوید.")
+           router.push('/login')
         } else {
-          toast.error("کد تایید نامعتبر است")
+           toast.error("کد تایید نامعتبر است")
         }
       } finally {
         setLoading(false)
@@ -67,16 +78,39 @@ export default function LoginPage() {
         </div>
 
         <h1 className="text-2xl font-bold mb-2 text-center">
-          {step === 1 ? "ورود به ویزیکا" : "تایید شماره موبایل"}
+          {step === 1 ? "ثبت‌نام در ویزیکا" : "تایید شماره موبایل"}
         </h1>
         <p className="text-sm text-muted-foreground mb-8 text-center">
           {step === 1 
-            ? "لطفا شماره موبایل خود را وارد کنید." 
+            ? "لطفا اطلاعات خود را وارد کنید." 
             : `کد تایید به شماره ${phone} ارسال شد.`}
         </p>
 
         {step === 1 && (
           <form onSubmit={handleSendOTP} className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2 text-right">
+                <label className="text-sm font-semibold">نام</label>
+                <Input 
+                    type="text" 
+                    placeholder="علی" 
+                    className="text-right h-14"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                />
+                </div>
+                <div className="space-y-2 text-right">
+                <label className="text-sm font-semibold">نام خانوادگی</label>
+                <Input 
+                    type="text" 
+                    placeholder="محمدی" 
+                    className="text-right h-14"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                />
+                </div>
+            </div>
+            
             <div className="space-y-2 text-right">
               <label className="text-sm font-semibold">شماره موبایل</label>
               <Input 
@@ -89,18 +123,18 @@ export default function LoginPage() {
                 maxLength={11}
               />
             </div>
-            <Button size="lg" type="submit" className="w-full text-base font-bold rounded-xl h-14 shadow-md" disabled={phone.length !== 11}>
+            <Button size="lg" type="submit" className="w-full text-base font-bold rounded-xl h-14 shadow-md" disabled={phone.length !== 11 || loading}>
               ارسال کد تایید
             </Button>
-
+            
             <div className="text-center mt-6">
                 <p className="text-sm text-muted-foreground">
-                    حساب کاربری ندارید؟ <Link href="/register" className="text-primary font-semibold hover:underline">ثبت‌نام کنید</Link>
+                    قبلاً ثبت‌نام کرده‌اید؟ <Link href="/login" className="text-primary font-semibold hover:underline">وارد شوید</Link>
                 </p>
             </div>
-
+            
             <p className="text-xs text-center text-muted-foreground leading-relaxed mt-4">
-              ورود شما به معنای پذیرش <Link href="#" className="text-primary underline">شرایط و قوانین</Link> ویزیکا است.
+              ثبت‌نام شما به معنای پذیرش <Link href="#" className="text-primary underline">شرایط و قوانین</Link> ویزیکا است.
             </p>
           </form>
         )}
@@ -110,7 +144,6 @@ export default function LoginPage() {
             <div className="space-y-2 text-right">
               <label className="text-sm font-semibold">کد تایید ۴ رقمی</label>
               <div className="flex gap-2 justify-center" dir="ltr">
-                {/* Mock OTP Input - real one uses multiple inputs or specialized library */}
                 <Input 
                   type="text" 
                   className="text-center text-2xl tracking-[1em] h-14 font-bold"
@@ -124,13 +157,13 @@ export default function LoginPage() {
             
             <div className="flex justify-between items-center text-sm">
               <button type="button" onClick={() => setStep(1)} className="text-primary flex items-center gap-1 hover:underline">
-                <ArrowLeft className="w-4 h-4" /> ویرایش شماره
+                <ArrowLeft className="w-4 h-4" /> ویرایش اطلاعات
               </button>
               <span className="text-muted-foreground">۱:۵۹ تا ارسال مجدد</span>
             </div>
 
-            <Button size="lg" type="submit" className="w-full text-base font-bold rounded-xl h-14 shadow-md">
-              تایید و ورود
+            <Button size="lg" type="submit" className="w-full text-base font-bold rounded-xl h-14 shadow-md" disabled={loading}>
+              تایید و ثبت‌نام
             </Button>
           </form>
         )}

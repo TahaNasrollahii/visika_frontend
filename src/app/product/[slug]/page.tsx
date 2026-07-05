@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import api from "@/lib/api"
 import { Product } from "@/components/shared/ProductCard"
+import { useAuth } from "@/hooks/useAuth"
 
 // Animation Variants
 const staggerContainer = {
@@ -39,6 +40,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [addingToCart, setAddingToCart] = useState(false)
+  const { user } = useAuth()
 
   useEffect(() => {
     api.get(`/products/products/${resolvedParams.slug}/`)
@@ -228,22 +230,32 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
 
               {/* Price */}
               <div className="space-y-2 pt-2">
-                {hasDiscount && (
-                  <div className="flex items-center justify-start gap-3 mb-1">
-                    <span className="text-base text-muted-foreground line-through decoration-destructive/60 decoration-2 font-bold">
-                      {product.price.toLocaleString("fa-IR")}
+                {user?.status === 1 ? (
+                  <div className="flex items-center justify-start py-4">
+                    <span className="text-sm font-bold text-muted-foreground bg-secondary/50 px-3 py-2 rounded-xl">
+                      برای مشاهده قیمت نیازمند تایید حساب هستید
                     </span>
-                    <Badge variant="destructive" className="font-black rounded-xl px-2.5 py-1 text-xs animate-pulse shadow-lg shadow-red-500/20">
-                      {discountPercent}٪ تخفیف
-                    </Badge>
                   </div>
+                ) : (
+                  <>
+                    {hasDiscount && (
+                      <div className="flex items-center justify-start gap-3 mb-1">
+                        <span className="text-base text-muted-foreground line-through decoration-destructive/60 decoration-2 font-bold">
+                          {product.price.toLocaleString("fa-IR")}
+                        </span>
+                        <Badge variant="destructive" className="font-black rounded-xl px-2.5 py-1 text-xs animate-pulse shadow-lg shadow-red-500/20">
+                          {discountPercent}٪ تخفیف
+                        </Badge>
+                      </div>
+                    )}
+                    <div className="flex justify-start items-end gap-1.5">
+                      <span className="text-4xl lg:text-5xl font-black text-foreground tracking-tighter">
+                        {(product.discountPrice || product.price).toLocaleString("fa-IR")}
+                      </span>
+                      <span className="text-sm font-bold text-muted-foreground mb-1.5">تومان</span>
+                    </div>
+                  </>
                 )}
-                <div className="flex justify-start items-end gap-1.5">
-                  <span className="text-4xl lg:text-5xl font-black text-foreground tracking-tighter">
-                    {(product.discountPrice || product.price).toLocaleString("fa-IR")}
-                  </span>
-                  <span className="text-sm font-bold text-muted-foreground mb-1.5">تومان</span>
-                </div>
               </div>
 
               {/* Action Button */}
@@ -254,6 +266,10 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               >
                 <Button 
                   onClick={async () => {
+                    if (user?.status === 1) {
+                      toast.error('حساب کاربری شما باید ابتدا توسط مدیران بررسی و فعال شود')
+                      return
+                    }
                     setAddingToCart(true)
                     try {
                       await api.post('/orders/cart/items/', { product_id: product.id, quantity: 1 })
