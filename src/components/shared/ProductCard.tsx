@@ -18,6 +18,7 @@ export interface Product {
   image: string
   badge?: string
   is_favorite?: boolean
+  features?: { id: number, title: string, value: string }[]
 }
 
 interface ProductCardProps {

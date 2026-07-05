@@ -180,28 +180,27 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
             </motion.p>
           </div>
 
-          <motion.div variants={fadeUp} className="space-y-5 py-6 border-y border-border/50">
-            <h3 className="font-bold text-xl flex items-center gap-2 text-foreground text-right w-full">
-              <CheckCircle2 className="w-6 h-6 text-primary" />
-              ویژگی‌های برجسته
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { label: 'وزن', value: '۱ کیلوگرم' },
-                { label: 'شماره پروانه', value: '۳۴/۱۰۲۳۹' },
-                { label: 'شرایط نگهداری', value: 'در یخچال (دمای ۱ تا ۴ درجه)' }
-              ].map((item, idx) => (
-                <motion.li 
-                  key={idx}
-                  whileHover={{ x: -4 }}
-                  className="flex items-center justify-between p-3.5 rounded-2xl bg-secondary/30 hover:bg-secondary/60 transition-colors border border-transparent hover:border-border/50"
-                >
-                  <span className="text-muted-foreground font-medium text-sm">{item.label}</span>
-                  <span className="font-bold text-foreground">{item.value}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
+          {product.features && product.features.length > 0 && (
+            <motion.div variants={fadeUp} className="space-y-5 py-6 border-y border-border/50">
+              <h3 className="font-bold text-xl flex items-center gap-2 text-foreground text-right w-full">
+                <CheckCircle2 className="w-6 h-6 text-primary" />
+                ویژگی‌های برجسته
+              </h3>
+              <ul className="space-y-3">
+                {product.features.map((item) => (
+                  <motion.li 
+                    key={item.id}
+                    whileHover={{ x: -4 }}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-secondary/30 hover:bg-secondary/60 transition-colors border border-transparent hover:border-border/50"
+                  >
+                    <span className="text-muted-foreground font-medium text-sm">{item.title}</span>
+                    <span className="font-bold text-foreground">{item.value}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
+
         </motion.div>
 
         {/* Buy Box - Glassmorphic floating card */}
