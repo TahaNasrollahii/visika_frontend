@@ -20,8 +20,6 @@ export interface Product {
   is_favorite?: boolean
   features?: { id: number, title: string, value: string }[]
   brand?: string
-  rating?: number
-  reviews_count?: number
 }
 
 interface ProductCardProps {

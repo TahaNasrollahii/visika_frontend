@@ -105,7 +105,6 @@ export default async function CategoryPage({
             مرتب‌سازی براساس:
           </div>
           <div className="flex items-center gap-6 text-sm font-medium">
-            <Link href={buildSortUrl('-reviews_count')} className={`hover:text-foreground transition-colors pb-1.5 px-1 ${currentSort === '-reviews_count' ? 'text-primary border-b-2 border-primary font-bold' : 'text-muted-foreground'}`}>پرفروش‌ترین</Link>
             <Link href={buildSortUrl('-created_at')} className={`hover:text-foreground transition-colors pb-1.5 px-1 ${currentSort === '-created_at' ? 'text-primary border-b-2 border-primary font-bold' : 'text-muted-foreground'}`}>جدیدترین</Link>
             <Link href={buildSortUrl('price')} className={`hover:text-foreground transition-colors pb-1.5 px-1 ${currentSort === 'price' ? 'text-primary border-b-2 border-primary font-bold' : 'text-muted-foreground'}`}>ارزان‌ترین</Link>
             <Link href={buildSortUrl('-price')} className={`hover:text-foreground transition-colors pb-1.5 px-1 ${currentSort === '-price' ? 'text-primary border-b-2 border-primary font-bold' : 'text-muted-foreground'}`}>گران‌ترین</Link>

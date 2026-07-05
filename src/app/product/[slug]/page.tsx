@@ -165,10 +165,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               <Badge variant="secondary" className="px-3 py-1.5 rounded-xl font-bold bg-primary/10 text-primary hover:bg-primary/20 border-none transition-colors">
                 برند: {product.brand || 'متفرقه'}
               </Badge>
-              <div className="flex items-center gap-1.5 text-amber-500 text-sm font-bold bg-amber-500/10 px-3 py-1.5 rounded-xl">
-                <Star className="w-4 h-4 fill-current" />
-                {product.rating || '۰.۰'} <span className="font-medium text-amber-600/80 dark:text-amber-400/80 text-xs">({product.reviews_count || 0} دیدگاه)</span>
-              </div>
             </motion.div>
             
             <motion.h1 variants={fadeUp} className="text-3xl md:text-4xl font-black text-foreground leading-[1.3] tracking-tight text-right w-full">
