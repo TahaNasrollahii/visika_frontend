@@ -1,9 +1,21 @@
 import React from "react"
 import { Flame } from "lucide-react"
-import { bestSellers } from "@/lib/data"
-import { ProductCard } from "@/components/shared/ProductCard"
+import { ProductCard, Product } from "@/components/shared/ProductCard"
 
-export default function BestSellingPage() {
+async function getBestSellers() {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/products/products/?is_best_seller=true", { cache: "no-store" })
+    if (!res.ok) return []
+    const data = await res.json()
+    return Array.isArray(data) ? data : (data.results || [])
+  } catch (error) {
+    return []
+  }
+}
+
+export default async function BestSellingPage() {
+  const bestSellers: Product[] = await getBestSellers()
+
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8">
       <div className="flex items-center gap-3 mb-8 border-b pb-4">
@@ -15,6 +27,11 @@ export default function BestSellingPage() {
         {bestSellers.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
+        {bestSellers.length === 0 && (
+          <div className="col-span-full py-12 text-center text-muted-foreground">
+            هیچ کالای پرفروشی یافت نشد.
+          </div>
+        )}
       </div>
     </div>
   )

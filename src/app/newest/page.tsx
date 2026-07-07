@@ -1,10 +1,21 @@
 import React from "react"
 import { Sparkles } from "lucide-react"
-import { bestSellers, hotOffers } from "@/lib/data"
-import { ProductCard } from "@/components/shared/ProductCard"
+import { ProductCard, Product } from "@/components/shared/ProductCard"
 
-export default function NewestPage() {
-  const newestProducts = [...bestSellers, ...hotOffers].reverse()
+async function getNewestProducts() {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/products/products/", { cache: "no-store" })
+    if (!res.ok) return []
+    const data = await res.json()
+    const products: Product[] = Array.isArray(data) ? data : (data.results || [])
+    return products.reverse() // Simulate newest by reversing the list
+  } catch (error) {
+    return []
+  }
+}
+
+export default async function NewestPage() {
+  const newestProducts: Product[] = await getNewestProducts()
 
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8">
@@ -17,6 +28,11 @@ export default function NewestPage() {
         {newestProducts.map((product) => (
           <ProductCard key={`new-${product.id}`} product={product} />
         ))}
+        {newestProducts.length === 0 && (
+          <div className="col-span-full py-12 text-center text-muted-foreground">
+            هیچ محصولی یافت نشد.
+          </div>
+        )}
       </div>
     </div>
   )

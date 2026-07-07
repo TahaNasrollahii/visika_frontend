@@ -1,9 +1,21 @@
 import React from "react"
 import { Percent } from "lucide-react"
-import { hotOffers } from "@/lib/data"
-import { ProductCard } from "@/components/shared/ProductCard"
+import { ProductCard, Product } from "@/components/shared/ProductCard"
 
-export default function OffersPage() {
+async function getHotOffers() {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/products/products/?is_hot_offer=true", { cache: "no-store" })
+    if (!res.ok) return []
+    const data = await res.json()
+    return Array.isArray(data) ? data : (data.results || [])
+  } catch (error) {
+    return []
+  }
+}
+
+export default async function OffersPage() {
+  const hotOffers: Product[] = await getHotOffers()
+
   return (
     <div className="container mx-auto px-4 py-12 lg:px-8">
       <div className="flex items-center gap-3 mb-8 border-b pb-4">
@@ -15,6 +27,11 @@ export default function OffersPage() {
         {hotOffers.map((product) => (
           <ProductCard key={`offer-${product.id}`} product={product} />
         ))}
+        {hotOffers.length === 0 && (
+          <div className="col-span-full py-12 text-center text-muted-foreground">
+            هیچ پیشنهاد ویژه‌ای یافت نشد.
+          </div>
+        )}
       </div>
     </div>
   )
