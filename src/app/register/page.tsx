@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,28 @@ export default function RegisterPage() {
   const [lastName, setLastName] = useState("")
   const [otp, setOtp] = useState("")
   const [loading, setLoading] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(119)
+  const [canResend, setCanResend] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (step === 2 && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1)
+      }, 1000)
+    } else if (timeLeft === 0 && step === 2) {
+      setCanResend(true)
+    }
+    return () => clearInterval(timer)
+  }, [step, timeLeft])
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    const formatted = `${m}:${s < 10 ? '0' : ''}${s}`
+    return formatted.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)])
+  }
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,6 +50,8 @@ export default function RegisterPage() {
       try {
         await api.post('/users/otp/request/', { phone_number: phone, action: 'register' })
         setStep(2)
+        setTimeLeft(119)
+        setCanResend(false)
         toast.success("کد تایید با موفقیت ارسال شد")
       } catch (err: any) {
         if (err.response?.status === 400) {
@@ -163,7 +186,13 @@ export default function RegisterPage() {
               <button type="button" onClick={() => setStep(1)} className="text-primary flex items-center gap-1 hover:underline">
                 <ArrowLeft className="w-4 h-4" /> ویرایش اطلاعات
               </button>
-              <span className="text-muted-foreground">۱:۵۹ تا ارسال مجدد</span>
+              {canResend ? (
+                <button type="button" onClick={handleSendOTP} disabled={loading} className="text-primary font-semibold hover:underline">
+                  ارسال مجدد کد
+                </button>
+              ) : (
+                <span className="text-muted-foreground">{formatTime(timeLeft)} تا ارسال مجدد</span>
+              )}
             </div>
 
             <Button size="lg" type="submit" className="w-full text-base font-bold rounded-xl h-14 shadow-md" disabled={loading}>
