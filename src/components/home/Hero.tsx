@@ -19,7 +19,7 @@ export function Hero() {
 
         {/* Floating Glassmorphic Widget 1 */}
         <div
-          className="absolute left-[8%] top-[15%] hidden lg:flex flex-col gap-3 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-3xl shadow-2xl w-64 rotate-[-4deg] z-20 animate-bounce duration-[3000ms]"
+          className="absolute left-[8%] top-[15%] hidden lg:flex flex-col gap-3 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-3xl shadow-2xl w-64 rotate-[-4deg] z-20 animate-float"
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gradient-to-tr from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-2xl shadow-lg border-2 border-white/30">🛵</div>
@@ -37,7 +37,7 @@ export function Hero() {
 
         {/* Floating Glassmorphic Widget 2 */}
         <div
-          className="absolute left-[28%] bottom-[20%] hidden lg:flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-5 py-3.5 rounded-2xl shadow-2xl rotate-[3deg] z-20 animate-bounce duration-[4000ms] delay-1000"
+          className="absolute left-[28%] bottom-[20%] hidden lg:flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-5 py-3.5 rounded-2xl shadow-2xl rotate-[3deg] z-20 animate-float [animation-delay:1s]"
         >
           <div className="text-3xl drop-shadow-lg">🎉</div>
           <div className="flex flex-col">
@@ -48,7 +48,7 @@ export function Hero() {
 
         {/* Floating Emoji */}
         <div
-          className="absolute top-1/3 left-[45%] text-5xl hidden lg:block opacity-60 blur-[1px] animate-bounce duration-[5000ms] delay-500"
+          className="absolute top-1/3 left-[45%] text-5xl hidden lg:block opacity-60 blur-[1px] animate-float [animation-delay:2s]"
         >
           🥑
         </div>
