@@ -2,34 +2,12 @@
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
 import { MapPin, Clock, CreditCard, ChevronLeft, ShieldCheck, CheckCircle2, Circle, Edit2, Check, Package, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api"
 import { toast } from "sonner"
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
-    }
-  }
-}
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-}
-
-const slideInLeft = {
-  hidden: { opacity: 0, x: -30 },
-  show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 28 } }
-}
 
 export default function CheckoutPage() {
   const [selectedPayment, setSelectedPayment] = useState('online')
@@ -172,30 +150,24 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 lg:px-8 min-h-[calc(100vh-200px)] overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="flex items-center gap-3 mb-8"
+      <div
+        className="flex items-center gap-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-500"
       >
         <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
           <CreditCard className="w-5 h-5" />
         </div>
         <h1 className="text-3xl font-black text-foreground tracking-tight">تکمیل سفارش</h1>
-      </motion.div>
+      </div>
 
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="show"
-        className="flex flex-col lg:flex-row gap-8 lg:gap-10"
+      <div
+        className="flex flex-col lg:flex-row gap-8 lg:gap-10 animate-in fade-in duration-700"
       >
 
         {/* Checkout Steps */}
         <div className="flex-1 space-y-8 min-w-0">
 
           {/* Address Section */}
-          <motion.div variants={fadeUp} className="bg-secondary/30 border border-border/50 rounded-[2rem] p-6 lg:p-8 shadow-sm relative overflow-hidden group">
+          <div className="bg-secondary/30 border border-border/50 rounded-[2rem] p-6 lg:p-8 shadow-sm relative overflow-hidden group animate-in slide-in-from-bottom-4 duration-500 fill-mode-both delay-100">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
             <div className="relative z-10">
@@ -244,10 +216,10 @@ export default function CheckoutPage() {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Delivery Time Section - Per Vendor */}
-          <motion.div variants={fadeUp} className="bg-secondary/30 border border-border/50 rounded-[2rem] p-6 lg:p-8 shadow-sm">
+          <div className="bg-secondary/30 border border-border/50 rounded-[2rem] p-6 lg:p-8 shadow-sm animate-in slide-in-from-bottom-4 duration-500 fill-mode-both delay-200">
             <div className="flex items-center gap-2 mb-6 pb-6 border-b border-border/50">
               <h2 className="font-bold text-xl flex items-center gap-3 text-foreground">
                 <div className="p-2 rounded-xl bg-blue-500/10 text-blue-500">
@@ -269,18 +241,14 @@ export default function CheckoutPage() {
                     {deliveryTimes.map((time, i) => {
                       const isActive = selectedDeliveryTimes[brand] === time
                       return (
-                        <motion.div
+                        <div
                           key={i}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
                           onClick={() => handleTimeSelect(brand, time)}
-                          className="relative cursor-pointer snap-center shrink-0 w-[180px]"
+                          className="relative cursor-pointer snap-center shrink-0 w-[180px] hover:scale-105 active:scale-95 transition-transform"
                         >
                           {isActive && (
-                            <motion.div
-                              layoutId={`activeTime-${brand}`}
+                            <div
                               className="absolute inset-0 bg-primary border-2 border-primary rounded-2xl shadow-[0_4px_15px_rgba(var(--primary),0.2)]"
-                              transition={{ type: "spring", stiffness: 300, damping: 25 }}
                             />
                           )}
                           <div className={`relative flex flex-col items-center justify-center p-3 h-[80px] rounded-2xl border-2 transition-colors duration-300 ${isActive ? 'border-transparent text-primary-foreground' : 'border-border/60 bg-secondary/30 text-muted-foreground hover:border-primary/40 hover:bg-secondary/50'}`}>
@@ -288,17 +256,17 @@ export default function CheckoutPage() {
                               {time}
                             </span>
                           </div>
-                        </motion.div>
+                        </div>
                       )
                     })}
                   </div>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Payment Method Section */}
-          <motion.div variants={fadeUp} className="bg-secondary/30 border border-border/50 rounded-[2rem] p-6 lg:p-8 shadow-sm">
+          <div className="bg-secondary/30 border border-border/50 rounded-[2rem] p-6 lg:p-8 shadow-sm animate-in slide-in-from-bottom-4 duration-500 fill-mode-both delay-300">
             <div className="flex items-center gap-2 mb-6 pb-6 border-b border-border/50">
               <h2 className="font-bold text-xl flex items-center gap-3 text-foreground">
                 <div className="p-2 rounded-xl bg-purple-500/10 text-purple-500">
@@ -312,18 +280,14 @@ export default function CheckoutPage() {
               {paymentMethods.map((method) => {
                 const isActive = selectedPayment === method.id
                 return (
-                  <motion.div
+                  <div
                     key={method.id}
-                    whileHover={{ scale: 1.01, x: -4 }}
-                    whileTap={{ scale: 0.99 }}
                     onClick={() => setSelectedPayment(method.id)}
-                    className="relative cursor-pointer"
+                    className="relative cursor-pointer hover:translate-x-[-4px] active:scale-99 transition-transform"
                   >
                     {isActive && (
-                      <motion.div
-                        layoutId="activePayment"
+                      <div
                         className="absolute inset-0 bg-primary/5 border-2 border-primary rounded-2xl shadow-[0_8px_20px_rgba(var(--primary),0.1)]"
-                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
                       />
                     )}
                     <div className={`relative flex items-center p-5 rounded-2xl border-2 transition-colors duration-300 ${isActive ? 'border-transparent' : 'border-border/60 bg-background/50 hover:border-primary/40 hover:bg-background'}`}>
@@ -341,16 +305,16 @@ export default function CheckoutPage() {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 )
               })}
             </div>
-          </motion.div>
+          </div>
 
         </div>
 
         {/* Order Summary */}
-        <motion.div variants={slideInLeft} className="w-full lg:w-[400px] shrink-0 relative z-10">
+        <div className="w-full lg:w-[400px] shrink-0 relative z-10 animate-in fade-in slide-in-from-right-8 duration-700 delay-200 fill-mode-both">
           <div className="sticky top-28 w-full rounded-[2.5rem] p-6 lg:p-8 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
 
             <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-b from-white/60 to-transparent dark:from-white/5 pointer-events-none" />
@@ -383,10 +347,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <motion.div
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-              >
+              <div className="hover:scale-[1.03] hover:-translate-y-0.5 active:scale-95 transition-transform">
                 <Button
                   onClick={handleCheckout} 
                   disabled={checkingOut || loading} 
@@ -401,21 +362,18 @@ export default function CheckoutPage() {
                     <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
                   )}
                 </Button>
-              </motion.div>
+              </div>
 
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="mt-6 p-4 bg-secondary/50 rounded-2xl flex items-start gap-3 border border-border/30"
-              >
+              <div className="mt-6 p-4 bg-secondary/50 rounded-2xl flex items-start gap-3 border border-border/30 hover:scale-[1.02] transition-transform">
                 <ShieldCheck className="w-6 h-6 text-emerald-500 shrink-0" />
                 <p className="text-xs font-medium text-muted-foreground leading-relaxed">
                   پرداخت شما از طریق درگاه‌های امن بانکی انجام می‌شود. تمامی اطلاعات شما نزد ما <span className="font-bold text-foreground">محفوظ</span> است.
                 </p>
-              </motion.div>
+              </div>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       {/* Address Modal */}
       {showAddressModal && (

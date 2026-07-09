@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react"
 import { Filter, ChevronDown, ChevronUp, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { motion, AnimatePresence } from "framer-motion"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Slider } from "@/components/ui/slider"
@@ -11,36 +10,28 @@ import { Slider } from "@/components/ui/slider"
 // --- Helper Components for the Sidebar ---
 
 function Accordion({ title, isOpen, onToggle, children }: { title: string, isOpen: boolean, onToggle: () => void, children: React.ReactNode }) {
-  const [isAnimating, setIsAnimating] = useState(false)
-
   return (
-    <div className="border border-border/50 rounded-2xl bg-background transition-shadow hover:shadow-sm" style={{ overflow: isOpen && !isAnimating ? 'visible' : 'hidden' }}>
+    <div className="border border-border/50 rounded-2xl bg-background transition-shadow hover:shadow-sm overflow-hidden">
       <button 
         onClick={onToggle}
         className="w-full flex items-center justify-between p-4 bg-background text-right focus:outline-none"
       >
         <span className="font-bold text-foreground text-sm">{title}</span>
-        <div className="w-6 h-6 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground">
-          {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        <div className="w-6 h-6 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground transition-transform duration-200">
+          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{ overflow: 'hidden' }}
-            onAnimationStart={() => setIsAnimating(true)}
-            onAnimationComplete={() => setIsAnimating(false)}
-          >
-            <div className="p-4 pt-2 pb-4 border-t border-border/50 bg-background/50">
-              {children}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div 
+        className={`grid transition-all duration-200 ease-in-out ${
+          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="p-4 pt-2 pb-4 border-t border-border/50 bg-background/50">
+            {children}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

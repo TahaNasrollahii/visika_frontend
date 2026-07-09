@@ -4,7 +4,6 @@ import React, { use, useEffect, useState } from "react"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { motion } from "framer-motion"
 import { ShoppingCart, Heart, Share2, ShieldCheck, Truck, RotateCcw, Store, Star, ChevronLeft, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -13,28 +12,6 @@ import { toast } from "sonner"
 import api from "@/lib/api"
 import { Product } from "@/components/shared/ProductCard"
 import { useAuth } from "@/hooks/useAuth"
-
-// Animation Variants
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    }
-  }
-}
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-}
-
-const slideInRight = {
-  hidden: { opacity: 0, x: 30 },
-  show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 28 } }
-}
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -66,11 +43,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
     <div className="container mx-auto px-4 py-8 lg:px-8 overflow-hidden min-h-[calc(100vh-200px)]">
       
       {/* Breadcrumbs - Animated */}
-      <motion.nav 
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="flex items-center gap-2 text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide"
+      <nav 
+        className="flex items-center gap-2 text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide animate-in fade-in slide-in-from-top-4 duration-500"
       >
         <Link href="/" className="hover:text-primary transition-colors">خانه</Link>
         <ChevronLeft className="w-4 h-4 opacity-50" />
@@ -79,25 +53,20 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
         <Link href="/categories/dairy" className="hover:text-primary transition-colors">لبنیات</Link>
         <ChevronLeft className="w-4 h-4 opacity-50" />
         <span className="text-foreground font-medium bg-primary/10 px-2.5 py-1 rounded-lg text-primary">{product.title}</span>
-      </motion.nav>
+      </nav>
 
-      <motion.div 
-        variants={staggerContainer}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10"
+      <div 
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 animate-in fade-in duration-700"
       >
         
         {/* Product Gallery */}
-        <motion.div variants={fadeUp} className="lg:col-span-4">
+        <div className="lg:col-span-4 animate-in slide-in-from-bottom-4 duration-500 fill-mode-both delay-100">
           <div className="relative aspect-square rounded-[2rem] flex items-center justify-center p-8 overflow-hidden group shadow-sm bg-gradient-to-tr from-secondary/50 via-background to-secondary/30 border border-border/60">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             
-            <motion.div 
-              className="relative w-full h-full z-10 flex items-center justify-center"
-              whileHover={{ scale: 1.05, rotate: -2 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            <div 
+              className="relative w-full h-full z-10 flex items-center justify-center hover:scale-105 hover:-rotate-2 transition-transform duration-300"
             >
               <Image 
                 src={mediaUrl(product.image)} 
@@ -106,11 +75,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                 className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.15)] mix-blend-multiply dark:mix-blend-normal"
                 priority
               />
-            </motion.div>
+            </div>
             
             {/* Gallery Actions - Floating */}
             <div className="absolute top-6 left-6 flex flex-col gap-3 z-20">
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <div className="hover:scale-110 active:scale-90 transition-transform">
                 <Button 
                   onClick={async () => {
                     const previousState = product.is_favorite
@@ -131,59 +100,58 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                   className={`w-12 h-12 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md hover:bg-white dark:hover:bg-zinc-800 hover:text-destructive border-white/20 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 ${product.is_favorite ? 'text-destructive' : 'text-muted-foreground'}`}>
                   <Heart className={`w-5 h-5 ${product.is_favorite ? 'fill-destructive' : ''}`} />
                 </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              </div>
+              <div className="hover:scale-110 active:scale-90 transition-transform">
                 <Button onClick={() => toast.success('لینک کپی شد')} variant="outline" size="icon" className="w-12 h-12 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md hover:bg-white dark:hover:bg-zinc-800 hover:text-primary border-white/20 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] text-muted-foreground transition-all duration-300">
                   <Share2 className="w-5 h-5" />
                 </Button>
-              </motion.div>
+              </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Product Info - Redesigned Layout */}
-        <motion.div variants={fadeUp} className="lg:col-span-5 flex flex-col justify-center space-y-8 lg:px-4">
+        <div className="lg:col-span-5 flex flex-col justify-center space-y-8 lg:px-4 animate-in slide-in-from-bottom-4 duration-500 fill-mode-both delay-200">
           <div className="space-y-5">
-            <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <Badge variant="secondary" className="px-3 py-1.5 rounded-xl font-bold bg-primary/10 text-primary hover:bg-primary/20 border-none transition-colors">
                 برند: {product.brand || 'متفرقه'}
               </Badge>
-            </motion.div>
+            </div>
             
-            <motion.h1 variants={fadeUp} className="text-3xl md:text-4xl font-black text-foreground leading-[1.3] tracking-tight text-right w-full">
+            <h1 className="text-3xl md:text-4xl font-black text-foreground leading-[1.3] tracking-tight text-right w-full">
               {product.title}
-            </motion.h1>
+            </h1>
             
-            <motion.p variants={fadeUp} className="text-muted-foreground leading-relaxed text-base md:text-lg text-right w-full">
+            <p className="text-muted-foreground leading-relaxed text-base md:text-lg text-right w-full">
               این محصول با بهترین کیفیت و رعایت کامل اصول بهداشتی تهیه شده است. مناسب برای مصرف روزانه خانواده و سرشار از مواد مغذی که انرژی روزانه شما را تامین می‌کند.
-            </motion.p>
+            </p>
           </div>
 
           {product.features && product.features.length > 0 && (
-            <motion.div variants={fadeUp} className="space-y-5 py-6 border-y border-border/50">
+            <div className="space-y-5 py-6 border-y border-border/50">
               <h3 className="font-bold text-xl flex items-center gap-2 text-foreground text-right w-full">
                 <CheckCircle2 className="w-6 h-6 text-primary" />
                 ویژگی‌های برجسته
               </h3>
               <ul className="space-y-3">
                 {product.features.map((item) => (
-                  <motion.li 
+                  <li 
                     key={item.id}
-                    whileHover={{ x: -4 }}
-                    className="flex items-center justify-between p-3.5 rounded-2xl bg-secondary/30 hover:bg-secondary/60 transition-colors border border-transparent hover:border-border/50"
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-secondary/30 hover:bg-secondary/60 transition-colors border border-transparent hover:border-border/50 hover:-translate-x-1 transition-transform"
                   >
                     <span className="text-muted-foreground font-medium text-sm">{item.title}</span>
                     <span className="font-bold text-foreground">{item.value}</span>
-                  </motion.li>
+                  </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           )}
 
-        </motion.div>
+        </div>
 
         {/* Buy Box - Glassmorphic floating card */}
-        <motion.div variants={slideInRight} className="lg:col-span-3 relative z-10">
+        <div className="lg:col-span-3 relative z-10 animate-in fade-in slide-in-from-right-8 duration-700 delay-300 fill-mode-both">
           <div className="sticky top-28 w-full rounded-[2.5rem] p-6 lg:p-8 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
             
             {/* Ambient background glow for the card */}
@@ -243,10 +211,8 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
               </div>
 
               {/* Action Button */}
-              <motion.div
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="pt-4"
+              <div
+                className="pt-4 hover:scale-[1.03] hover:-translate-y-0.5 active:scale-95 transition-transform"
               >
                 <Button 
                   onClick={async () => {
@@ -286,7 +252,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                   {/* Subtle shine effect */}
                   <div className="absolute inset-0 -translate-x-[150%] animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
                 </Button>
-              </motion.div>
+              </div>
 
               {/* Guarantees */}
               <div className="pt-2 space-y-3">
@@ -295,24 +261,23 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
                   { icon: Truck, text: 'ارسال زیر ۲ ساعت', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
                   { icon: RotateCcw, text: 'مرجوعی تا ۷ روز', color: 'text-rose-500', bg: 'bg-rose-500/10' }
                 ].map((guarantee, idx) => (
-                  <motion.div 
+                  <div 
                     key={idx}
-                    whileHover={{ x: -4 }}
-                    className="flex items-center gap-3 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors group cursor-default"
+                    className="flex items-center gap-3 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors group cursor-default hover:-translate-x-1 transition-transform"
                   >
                     <div className={`p-2.5 rounded-xl ${guarantee.bg} ${guarantee.color} transition-transform group-hover:scale-110`}>
                       <guarantee.icon className="w-4 h-4" />
                     </div>
                     <span>{guarantee.text}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
             </div>
           </div>
-        </motion.div>
+        </div>
 
-      </motion.div>
+      </div>
     </div>
   )
 }
