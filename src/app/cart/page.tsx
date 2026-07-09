@@ -118,7 +118,9 @@ export default function CartPage() {
                   
                   <div className="flex-1 flex flex-col justify-between min-w-0">
                     <div>
-                      <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 leading-tight truncate">{item.product.title}</h3>
+                      <Link href={`/product/${item.product.id}`} className="hover:text-primary transition-colors">
+                        <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 leading-tight truncate">{item.product.title}</h3>
+                      </Link>
                       <div className="flex items-center gap-2 md:gap-4 text-[11px] md:text-sm text-muted-foreground">
                         <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3 md:w-4 md:h-4"/> گارانتی اصالت</span>
                         <span className="hidden sm:inline">ارسال امروز</span>

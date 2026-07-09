@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { MapPin, Clock, CreditCard, ChevronLeft, ShieldCheck, CheckCircle2, Circle, Edit2, Check, Package } from "lucide-react"
+import { MapPin, Clock, CreditCard, ChevronLeft, ShieldCheck, CheckCircle2, Circle, Edit2, Check, Package, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api"
 import { toast } from "sonner"
@@ -36,7 +37,11 @@ export default function CheckoutPage() {
   const [cartItemsTotal, setCartItemsTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [checkingOut, setCheckingOut] = useState(false)
+  const [addresses, setAddresses] = useState<any[]>([])
   const [defaultAddress, setDefaultAddress] = useState<any>(null)
+  const [showAddressModal, setShowAddressModal] = useState(false)
+  const [newAddress, setNewAddress] = useState({ title: '', detail: '', postal_code: '', is_default: false })
+  const [submittingAddress, setSubmittingAddress] = useState(false)
 
   // Vendor specific delivery times
   const [brands, setBrands] = useState<string[]>([])
@@ -78,9 +83,12 @@ export default function CheckoutPage() {
         return api.get('/users/addresses/')
       })
       .then(res => {
-        if (res && res.data && res.data.length > 0) {
-          const defaultAddr = res.data.find((a: any) => a.is_default) || res.data[0]
-          setDefaultAddress(defaultAddr)
+        if (res && res.data) {
+          setAddresses(res.data)
+          if (res.data.length > 0) {
+            const defaultAddr = res.data.find((a: any) => a.is_default) || res.data[0]
+            setDefaultAddress(defaultAddr)
+          }
         }
         setLoading(false)
       })
@@ -89,6 +97,41 @@ export default function CheckoutPage() {
         router.push('/cart')
       })
   }, [deliveryTimes, router])
+
+  const fetchAddresses = async () => {
+    try {
+      const res = await api.get('/users/addresses/')
+      setAddresses(res.data)
+      if (res.data.length > 0 && !defaultAddress) {
+        const defaultAddr = res.data.find((a: any) => a.is_default) || res.data[0]
+        setDefaultAddress(defaultAddr)
+      }
+    } catch (err) {
+      toast.error("خطا در دریافت آدرس‌ها")
+    }
+  }
+
+  const handleCreateAddress = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newAddress.title || !newAddress.detail) {
+      toast.error("لطفا عنوان و جزئیات آدرس را وارد کنید")
+      return
+    }
+    setSubmittingAddress(true)
+    try {
+      const res = await api.post('/users/addresses/', newAddress)
+      setAddresses([res.data, ...addresses.map(a => newAddress.is_default ? { ...a, is_default: false } : a)])
+      setDefaultAddress(res.data)
+      setShowAddressModal(false)
+      setNewAddress({ title: '', detail: '', postal_code: '', is_default: false })
+      toast.success("آدرس جدید با موفقیت ثبت شد")
+      fetchAddresses()
+    } catch (err) {
+      toast.error("خطا در ثبت آدرس جدید")
+    } finally {
+      setSubmittingAddress(false)
+    }
+  }
 
   const shippingCost = 25000
   const finalPrice = cartTotal
@@ -163,38 +206,40 @@ export default function CheckoutPage() {
                   </div>
                   آدرس تحویل سفارش
                 </h2>
-                <Link href="/profile/addresses">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="outline" size="sm" className="rounded-xl border-border/60 hover:bg-background shadow-sm flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                      <Edit2 className="w-4 h-4" />
-                      ویرایش آدرس
-                    </Button>
-                  </motion.div>
-                </Link>
+                <Button onClick={() => setShowAddressModal(true)} variant="outline" size="sm" className="rounded-xl border-border/60 hover:bg-background shadow-sm flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+                  <Plus className="w-4 h-4" />
+                  آدرس جدید
+                </Button>
               </div>
               <div className="space-y-4">
-                {defaultAddress ? (
-                  <>
-                    <p className="font-bold text-lg text-foreground leading-relaxed">
-                      {defaultAddress.detail}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-medium text-muted-foreground">
-                      <span className="flex items-center gap-2 bg-background/50 px-3 py-1.5 rounded-lg border border-border/30">
-                        <ShieldCheck className="w-4 h-4 text-emerald-500" /> عنوان آدرس: {defaultAddress.title}
-                      </span>
-                      {defaultAddress.postal_code && (
-                        <span className="flex items-center gap-2 bg-background/50 px-3 py-1.5 rounded-lg border border-border/30">
-                          کد پستی: {defaultAddress.postal_code}
-                        </span>
-                      )}
-                    </div>
-                  </>
+                {addresses.length > 0 ? (
+                  <div className="grid gap-4">
+                    {addresses.map(address => (
+                      <div 
+                        key={address.id} 
+                        onClick={() => setDefaultAddress(address)}
+                        className={`cursor-pointer border-2 rounded-2xl p-4 transition-all ${defaultAddress?.id === address.id ? 'border-primary bg-primary/5' : 'border-border/50 hover:border-primary/40'}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`mt-1 flex items-center justify-center w-5 h-5 rounded-full border-2 shrink-0 ${defaultAddress?.id === address.id ? 'border-primary' : 'border-muted-foreground'}`}>
+                            {defaultAddress?.id === address.id && <div className="w-2.5 h-2.5 bg-primary rounded-full" />}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-bold">{address.title}</h3>
+                              {address.is_default && <span className="text-[10px] bg-secondary px-2 py-0.5 rounded-full text-muted-foreground">پیش‌فرض</span>}
+                            </div>
+                            <p className="text-sm text-muted-foreground leading-relaxed">{address.detail}</p>
+                            {address.postal_code && <p className="text-xs text-muted-foreground mt-2">کد پستی: {address.postal_code}</p>}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl flex items-center justify-between">
                     <span className="font-bold">آدرسی ثبت نشده است.</span>
-                    <Link href="/profile/addresses">
-                      <Button size="sm" className="bg-rose-500 hover:bg-rose-600 text-white rounded-lg">ثبت آدرس</Button>
-                    </Link>
+                    <Button onClick={() => setShowAddressModal(true)} size="sm" className="bg-rose-500 hover:bg-rose-600 text-white rounded-lg">ثبت آدرس</Button>
                   </div>
                 )}
               </div>
@@ -371,6 +416,69 @@ export default function CheckoutPage() {
           </div>
         </motion.div>
       </motion.div>
+
+      {/* Address Modal */}
+      {showAddressModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+          <div className="bg-card w-full max-w-lg rounded-3xl border shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-bold">ثبت آدرس جدید</h2>
+              <Button variant="ghost" size="icon" onClick={() => setShowAddressModal(false)} className="rounded-full hover:bg-secondary">
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+            <form onSubmit={handleCreateAddress} className="p-6 space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">عنوان آدرس (مثلا: خانه، محل کار)</label>
+                <Input 
+                  value={newAddress.title} 
+                  onChange={e => setNewAddress({...newAddress, title: e.target.value})} 
+                  placeholder="مثال: خانه" 
+                  className="rounded-xl"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">جزئیات کامل آدرس</label>
+                <textarea 
+                  value={newAddress.detail}
+                  onChange={e => setNewAddress({...newAddress, detail: e.target.value})}
+                  placeholder="استان، شهر، خیابان، پلاک، واحد..."
+                  className="w-full min-h-[100px] p-3 rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">کد پستی (اختیاری)</label>
+                <Input 
+                  value={newAddress.postal_code} 
+                  onChange={e => setNewAddress({...newAddress, postal_code: e.target.value})} 
+                  placeholder="کد پستی ۱۰ رقمی" 
+                  className="rounded-xl"
+                  dir="ltr"
+                />
+              </div>
+              <div className="flex items-center gap-2 pt-2">
+                <input 
+                  type="checkbox" 
+                  id="is_default" 
+                  checked={newAddress.is_default}
+                  onChange={e => setNewAddress({...newAddress, is_default: e.target.checked})}
+                  className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label htmlFor="is_default" className="text-sm font-medium cursor-pointer">
+                  انتخاب به عنوان آدرس پیش‌فرض
+                </label>
+              </div>
+              <div className="pt-6">
+                <Button type="submit" disabled={submittingAddress} className="w-full rounded-xl h-12 text-base font-bold">
+                  {submittingAddress ? 'در حال ثبت...' : 'ثبت آدرس'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
