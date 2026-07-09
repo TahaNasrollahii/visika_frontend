@@ -74,10 +74,15 @@ export default function LoginPage() {
       setLoading(true)
       try {
         await api.post('/users/otp/login/', { phone_number: phone, otp })
+        const userRes = await api.get('/users/info')
         toast.success("ورود موفقیت‌آمیز")
         window.dispatchEvent(new Event("user-updated"))
         window.dispatchEvent(new Event("cart-updated"))
-        router.push('/profile')
+        if (userRes.data.role === 'vendor') {
+          router.push('/vendor/products')
+        } else {
+          router.push('/profile')
+        }
       } catch (err: any) {
         if (err.response?.status === 404) {
           toast.error("کاربری با این شماره یافت نشد. لطفا ثبت‌نام کنید")

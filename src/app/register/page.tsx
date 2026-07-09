@@ -82,7 +82,11 @@ export default function RegisterPage() {
         toast.success("ثبت‌نام با موفقیت انجام شد")
         window.dispatchEvent(new Event("user-updated"))
         window.dispatchEvent(new Event("cart-updated"))
-        router.push('/profile')
+        if (role === 'vendor') {
+          router.push('/vendor/products')
+        } else {
+          router.push('/profile')
+        }
       } catch (err: any) {
         if (err.response?.data?.phone_number) {
            toast.error("این شماره قبلا ثبت‌نام کرده است. لطفا وارد شوید.")

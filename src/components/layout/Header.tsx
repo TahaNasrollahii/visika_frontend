@@ -29,17 +29,23 @@ export function Header() {
 
   const fetchData = async () => {
     try {
-      const [cartRes, userRes] = await Promise.all([
-        api.get('/orders/cart'),
-        api.get('/users/info')
-      ])
-
-      const items = cartRes.data.items || []
-      const totalQuantity = items.reduce((acc: number, item: any) => acc + item.quantity, 0)
-      setCartCount(totalQuantity)
+      // Fetch user info first
+      const userRes = await api.get('/users/info')
       setUser(userRes.data)
       setIsLoggedIn(true)
-    } catch {
+
+      // Then fetch cart, but catch its error independently
+      // so a 403 (e.g. for vendors) doesn't log the user out
+      try {
+        const cartRes = await api.get('/orders/cart')
+        const items = cartRes.data.items || []
+        const totalQuantity = items.reduce((acc: number, item: any) => acc + item.quantity, 0)
+        setCartCount(totalQuantity)
+      } catch (cartErr) {
+        setCartCount(0)
+      }
+    } catch (err) {
+      // Only log out if user info fails
       setCartCount(0)
       setUser(null)
       setIsLoggedIn(false)
