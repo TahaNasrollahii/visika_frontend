@@ -8,20 +8,21 @@ import { ProductCard } from "@/components/shared/ProductCard";
 export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   
-  // Drag scrolling logic
-  const [isDragging, setIsDragging] = useState(false);
+  // Drag scrolling logic — use refs instead of state so the RAF loop never
+  // restarts on hover/drag changes (which would cause continuous re-renders).
+  const isDraggingRef = useRef(false);
+  const isHoveredRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false); // kept for cursor style only
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     let animationFrameId: number;
     let accumulated = 0;
     const autoScroll = () => {
-      if (scrollRef.current && !isHovered && !isDragging) {
+      if (scrollRef.current && !isHoveredRef.current && !isDraggingRef.current) {
         accumulated += 0.5; 
         if (Math.abs(accumulated) >= 1) {
-           // Use scrollBy for more reliable cross-browser scrolling behavior
            scrollRef.current.scrollBy({ left: -1 }); 
            accumulated = 0;
         }
@@ -31,17 +32,22 @@ export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
     
     animationFrameId = requestAnimationFrame(autoScroll);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isHovered, isDragging]);
+  // Empty deps: start once, read live values from refs — no restarts.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    isDraggingRef.current = true;
     setIsDragging(true);
     setStartX(e.pageX - scrollRef.current!.offsetLeft);
     setScrollLeft(scrollRef.current!.scrollLeft);
   };
   const handleMouseLeave = () => {
+    isDraggingRef.current = false;
     setIsDragging(false);
   };
   const handleMouseUp = () => {
+    isDraggingRef.current = false;
     setIsDragging(false);
   };
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -67,8 +73,8 @@ export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
   return (
     <section className="container mx-auto px-4 lg:px-8">
       <div 
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => { isHoveredRef.current = true; }}
+        onMouseLeave={() => { isHoveredRef.current = false; }}
         className="bg-gradient-to-br from-primary to-primary/80 rounded-[2rem] p-4 md:p-6 lg:p-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-6 lg:gap-8 overflow-hidden relative shadow-2xl shadow-primary/20 border border-primary/10"
       >
         
