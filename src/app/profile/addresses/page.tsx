@@ -167,10 +167,13 @@ export default function AddressesPage() {
                 <label className="text-sm font-medium">کد پستی (اختیاری)</label>
                 <Input 
                   value={newAddress.postal_code} 
-                  onChange={e => setNewAddress({...newAddress, postal_code: e.target.value})} 
+                  onChange={e => setNewAddress({...newAddress, postal_code: e.target.value.replace(/\D/g, '')})} 
                   placeholder="کد پستی ۱۰ رقمی" 
                   className="rounded-xl"
                   dir="ltr"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={10}
                 />
               </div>
               <div className="flex items-center gap-2 pt-2">
