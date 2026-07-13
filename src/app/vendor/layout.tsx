@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { Store, Package, ShoppingBag, Bell, LogOut } from "lucide-react"
+import { Store, Package, ShoppingBag, Bell, LogOut, Settings2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import api from "@/lib/api"
 import { toast } from "sonner"
@@ -94,6 +94,12 @@ export default function VendorLayout({ children }: { children: React.ReactNode }
                 <Button variant="ghost" className="w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold">
                   <Bell className="w-5 h-5 text-muted-foreground" />
                   ارسال اعلان
+                </Button>
+              </Link>
+              <Link href="/vendor/rules">
+                <Button variant="ghost" className="w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold">
+                  <Settings2 className="w-5 h-5 text-muted-foreground" />
+                  قوانین فروشگاه
                 </Button>
               </Link>
             </nav>
