@@ -26,20 +26,21 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
   },
   async rewrites() {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
     return [
       // Match paths that already end with a slash
       {
         source: '/api/:path*/',
-        destination: 'http://127.0.0.1:8000/:path*/',
+        destination: `${API_URL}/:path*/`,
       },
       // Match paths without trailing slash and add one (Django requires it)
       {
         source: '/api/:path*',
-        destination: 'http://127.0.0.1:8000/:path*/',
+        destination: `${API_URL}/:path*/`,
       },
       {
         source: '/media/:path*',
-        destination: 'http://127.0.0.1:8000/media/:path*',
+        destination: `${API_URL}/media/:path*`,
       }
     ]
   }
