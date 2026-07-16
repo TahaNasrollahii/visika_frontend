@@ -2,10 +2,12 @@ import React from "react"
 import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
 
+const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000"
+
 async function getCategories() {
-  const res = await fetch("http://127.0.0.1:8000/products/categories/", { cache: "no-store" })
+  const res = await fetch(`${BACKEND_URL}/products/categories/`, { cache: "no-store" })
   if (!res.ok) return []
-  return res.json()
+  return res.json() as Promise<{ id: number; title: string; slug: string; icon: string; color: string }[]>
 }
 
 export default async function CategoriesPage() {
