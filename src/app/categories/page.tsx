@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
 
 async function getCategories() {
-  const res = await fetch("http://127.0.0.1:8000/products/categories/", { cache: "no-store" })
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/products/categories/`, { cache: "no-store" })
   if (!res.ok) return []
   return res.json()
 }
@@ -15,7 +15,7 @@ export default async function CategoriesPage() {
       <h1 className="text-3xl font-bold mb-8">دسته‌بندی‌های ویزیکا</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category) => (
+        {categories.map((category: any) => (
           <Link 
             key={category.id} 
             href={`/categories/${category.slug}`}
