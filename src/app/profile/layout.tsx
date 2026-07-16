@@ -48,11 +48,12 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
   const handleLogout = async () => {
     try {
       await api.post('/users/logout/')
-      window.dispatchEvent(new Event("user-updated"))
-      window.dispatchEvent(new Event("cart-updated"))
-      window.location.href = '/login' // Force full navigation to clear state
     } catch (err) {
       console.error("Logout failed", err)
+    } finally {
+      window.dispatchEvent(new Event("user-updated"))
+      window.dispatchEvent(new Event("cart-updated"))
+      window.location.href = '/login'
     }
   }
 
