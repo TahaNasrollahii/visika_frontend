@@ -44,7 +44,7 @@ export default async function Home() {
           <h2 className="text-2xl font-bold tracking-tight">دسته‌بندی‌ها</h2>
         </div>
         <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-          {categories.map((cat) => (
+          {categories.map((cat: any) => (
             <Link
               key={cat.id}
               href={`/categories/${cat.slug}`}
@@ -81,7 +81,7 @@ export default async function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {bestSellers.map((product) => (
+          {bestSellers.map((product: any) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
