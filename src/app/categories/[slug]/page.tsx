@@ -7,20 +7,28 @@ import { FiltersSidebar } from "@/components/category/FiltersSidebar"
 import Link from "next/link"
 
 async function getCategory(slug: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/products/categories/`, { cache: "no-store" })
-  if (!res.ok) return null
-  const categories = await res.json()
-  return categories.find((c: any) => c.slug === slug) ?? null
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/categories/`, { next: { revalidate: 60 } })
+    if (!res.ok) return null
+    const categories = await res.json()
+    return categories.find((c: any) => c.slug === slug) ?? null
+  } catch (err) {
+    return null
+  }
 }
 
 async function getBrands(categorySlug: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/products/brands/?category_slug=${encodeURIComponent(categorySlug)}`, { cache: "no-store" })
-  if (!res.ok) return []
-  return res.json()
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/brands/?category_slug=${encodeURIComponent(categorySlug)}`, { next: { revalidate: 60 } })
+    if (!res.ok) return []
+    return res.json()
+  } catch (err) {
+    return []
+  }
 }
 
 async function getProductsForCategory(slug: string, searchParams: any) {
-  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/products/products/`)
+  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/products/`)
   url.searchParams.append("category_slug", slug)
   
   // Add other filters from searchParams
@@ -30,11 +38,15 @@ async function getProductsForCategory(slug: string, searchParams: any) {
     }
   })
 
-  const res = await fetch(url.toString(), { cache: "no-store" })
-  if (!res.ok) {
+  try {
+    const res = await fetch(url.toString(), { next: { revalidate: 60 } })
+    if (!res.ok) {
+      return { results: [], count: 0 }
+    }
+    return res.json() // With pagination, it returns { count, next, previous, results }
+  } catch (err) {
     return { results: [], count: 0 }
   }
-  return res.json() // With pagination, it returns { count, next, previous, results }
 }
 
 export default async function CategoryPage({ 
@@ -55,8 +67,13 @@ export default async function CategoryPage({
 
   const brands = await getBrands(slug)
   
-  const categoriesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/products/categories/`, { cache: "no-store" })
-  const allCategories = categoriesRes.ok ? await categoriesRes.json() : []
+  let allCategories = []
+  try {
+    const categoriesRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/categories/`, { next: { revalidate: 60 } })
+    allCategories = categoriesRes.ok ? await categoriesRes.json() : []
+  } catch (err) {
+    allCategories = []
+  }
 
   const productsData = await getProductsForCategory(slug, currentSearchParams)
   

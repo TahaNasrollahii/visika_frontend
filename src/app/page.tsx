@@ -8,7 +8,7 @@ import { mediaUrl } from "@/lib/utils"
 
 async function getCategories() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/categories/`, { cache: "no-store" })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/categories/`, { next: { revalidate: 60 } })
     if (!res.ok) return []
     const data = await res.json()
     return Array.isArray(data) ? data : (data.results || [])
@@ -19,7 +19,7 @@ async function getCategories() {
 
 async function getBestSellers() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/products/?is_best_seller=true`, { cache: "no-store" })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/products/?is_best_seller=true`, { next: { revalidate: 60 } })
     if (!res.ok) return []
     const data = await res.json()
     return Array.isArray(data) ? data : (data.results || [])
@@ -30,7 +30,7 @@ async function getBestSellers() {
 
 async function getHotOffers() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/products/?is_hot_offer=true`, { cache: "no-store" })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/products/?is_hot_offer=true`, { next: { revalidate: 60 } })
     if (!res.ok) return []
     const data = await res.json()
     return Array.isArray(data) ? data : (data.results || [])

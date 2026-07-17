@@ -4,7 +4,7 @@ import { ChevronLeft } from "lucide-react"
 
 async function getCategories() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/categories/`, { cache: "no-store" })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://visika-back.vercel.app'}/products/categories/`, { next: { revalidate: 60 } })
     if (!res.ok) return []
     const data = await res.json()
     return Array.isArray(data) ? data : (data.results || [])
