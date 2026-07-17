@@ -4,6 +4,7 @@ import { ProductCard, Product } from "@/components/shared/ProductCard"
 import { Button } from "@/components/ui/button"
 import { Hero } from "@/components/home/Hero"
 import { HotOffers } from "@/components/home/HotOffers"
+import { mediaUrl } from "@/lib/utils"
 
 async function getCategories() {
   try {
@@ -64,7 +65,7 @@ export default async function Home() {
             >
               <div className={`relative w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-transform group-hover:-translate-y-1 group-hover:shadow-md ${cat.color} overflow-hidden`}>
                 {cat.image ? (
-                  <img src={cat.image} alt={cat.title} className="w-full h-full object-cover" />
+                  <img src={mediaUrl(cat.image)} alt={cat.title} className="w-full h-full object-cover" />
                 ) : (
                   cat.icon
                 )}
