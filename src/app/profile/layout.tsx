@@ -7,6 +7,8 @@ import { User, Package, Heart, MapPin, Bell, LogOut, ChevronLeft } from "lucide-
 import { cn } from "@/lib/utils"
 import api from "@/lib/api"
 
+import { mediaUrl } from "@/lib/utils"
+
 export default function ProfileLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [user, setUser] = useState<{full_name?: string, phone_number?: string, avatar?: string} | null>(null)
@@ -87,7 +89,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
               onClick={handleAvatarClick}
             >
               {user?.avatar ? (
-                <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                <img src={mediaUrl(user.avatar)} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <span>👤</span>
               )}
