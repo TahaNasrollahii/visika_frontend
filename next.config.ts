@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "visika-back.vercel.app",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
     dangerouslyAllowSVG: true,
   },
