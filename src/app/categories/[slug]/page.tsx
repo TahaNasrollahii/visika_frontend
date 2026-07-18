@@ -4,6 +4,7 @@ import { Filter, SlidersHorizontal, SortDesc, ChevronLeft, ChevronRight } from "
 import { ProductCard } from "@/components/shared/ProductCard"
 import { Button } from "@/components/ui/button"
 import { FiltersSidebar } from "@/components/category/FiltersSidebar"
+import { MobileFiltersSort } from "@/components/category/MobileFiltersSort"
 import Link from "next/link"
 
 async function getCategory(slug: string) {
@@ -138,16 +139,13 @@ export default async function CategoryPage({
         />
 
         {/* Mobile Filters Trigger */}
-        <div className="lg:hidden flex items-center gap-2 mb-4">
-          <Button variant="outline" className="flex-1 gap-2">
-            <Filter className="w-4 h-4" />
-            فیلترها
-          </Button>
-          <Button variant="outline" className="flex-1 gap-2">
-            <SlidersHorizontal className="w-4 h-4" />
-            مرتب‌سازی
-          </Button>
-        </div>
+        <MobileFiltersSort currentSort={currentSort}>
+          <FiltersSidebar 
+            brands={brands} 
+            categories={allCategories} 
+            activeCategorySlug={slug}
+          />
+        </MobileFiltersSort>
 
         {/* Product Grid */}
         <main className="flex-1 flex flex-col">

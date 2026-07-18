@@ -1,16 +1,18 @@
 "use client"
 import Link from "next/link"
 import { useAuth } from "@/hooks/useAuth"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { useEffect } from "react"
 import { Store, Package, ShoppingBag, Bell, LogOut, Settings2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import api from "@/lib/api"
 import { toast } from "sonner"
 
 export default function VendorLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     if (!loading) {
@@ -79,26 +81,26 @@ export default function VendorLayout({ children }: { children: React.ReactNode }
 
             <nav className="flex flex-col gap-2">
               <Link href="/vendor/products">
-                <Button variant="ghost" className="w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold">
-                  <Package className="w-5 h-5 text-muted-foreground" />
+                <Button variant="ghost" className={cn("w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold", pathname.startsWith("/vendor/products") ? "bg-primary/10 text-primary hover:bg-primary/15" : "text-muted-foreground hover:text-foreground")}>
+                  <Package className={cn("w-5 h-5", pathname.startsWith("/vendor/products") ? "text-primary" : "text-muted-foreground")} />
                   مدیریت محصولات
                 </Button>
               </Link>
               <Link href="/vendor/orders">
-                <Button variant="ghost" className="w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold">
-                  <ShoppingBag className="w-5 h-5 text-muted-foreground" />
+                <Button variant="ghost" className={cn("w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold", pathname.startsWith("/vendor/orders") ? "bg-primary/10 text-primary hover:bg-primary/15" : "text-muted-foreground hover:text-foreground")}>
+                  <ShoppingBag className={cn("w-5 h-5", pathname.startsWith("/vendor/orders") ? "text-primary" : "text-muted-foreground")} />
                   سفارشات مشتریان
                 </Button>
               </Link>
               <Link href="/vendor/notifications">
-                <Button variant="ghost" className="w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold">
-                  <Bell className="w-5 h-5 text-muted-foreground" />
+                <Button variant="ghost" className={cn("w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold", pathname.startsWith("/vendor/notifications") ? "bg-primary/10 text-primary hover:bg-primary/15" : "text-muted-foreground hover:text-foreground")}>
+                  <Bell className={cn("w-5 h-5", pathname.startsWith("/vendor/notifications") ? "text-primary" : "text-muted-foreground")} />
                   ارسال اعلان
                 </Button>
               </Link>
               <Link href="/vendor/rules">
-                <Button variant="ghost" className="w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold">
-                  <Settings2 className="w-5 h-5 text-muted-foreground" />
+                <Button variant="ghost" className={cn("w-full justify-start gap-3 h-12 text-base hover:bg-secondary rounded-xl font-bold", pathname.startsWith("/vendor/rules") ? "bg-primary/10 text-primary hover:bg-primary/15" : "text-muted-foreground hover:text-foreground")}>
+                  <Settings2 className={cn("w-5 h-5", pathname.startsWith("/vendor/rules") ? "text-primary" : "text-muted-foreground")} />
                   قوانین فروشگاه
                 </Button>
               </Link>

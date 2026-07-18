@@ -208,9 +208,9 @@ export function Header() {
 
             {/* Mobile Actions (Hidden on Desktop) */}
             <div className="flex md:hidden items-center gap-1">
-              <Link href={isLoggedIn ? "/profile" : "/login"} tabIndex={-1}>
+              <Link href={isLoggedIn ? (user?.role === 'vendor' ? "/vendor/products" : "/profile") : "/login"} tabIndex={-1}>
                 <Button variant="ghost" size="icon" className="text-foreground/80 hover:bg-secondary/80 rounded-full h-10 w-10">
-                  <User className="w-[22px] h-[22px]" />
+                  {user?.role === 'vendor' ? <Store className="w-[22px] h-[22px]" /> : <User className="w-[22px] h-[22px]" />}
                 </Button>
               </Link>
               {isLoggedIn && (
