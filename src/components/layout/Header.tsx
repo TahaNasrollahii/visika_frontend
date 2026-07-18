@@ -191,14 +191,16 @@ export function Header() {
                   )}
 
                   {/* Promotional Banner */}
-                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-4 flex items-center justify-between">
+                  <div className="bg-destructive/10 dark:bg-destructive/20 rounded-2xl p-4 flex items-center justify-between mt-2">
                     <div className="flex flex-col">
-                      <span className="font-bold text-blue-600 dark:text-blue-400">تخفیف ویژه میوه‌های تابستانی 🍉</span>
-                      <span className="text-[11px] text-muted-foreground mt-1">تا ۳۰٪ تخفیف روی محصولات منتخب</span>
+                      <span className="font-bold text-destructive dark:text-red-400">تخفیف‌ها و پیشنهادهای ویژه 🔥</span>
+                      <span className="text-[11px] text-muted-foreground mt-1">مشاهده داغ‌ترین تخفیف‌های روز و محصولات شگفت‌انگیز</span>
                     </div>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-5 h-8 text-xs font-bold shadow-md">
-                      مشاهده
-                    </Button>
+                    <Link href="/offers" tabIndex={-1}>
+                      <Button size="sm" className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl px-5 h-8 text-xs font-bold shadow-md">
+                        مشاهده
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
