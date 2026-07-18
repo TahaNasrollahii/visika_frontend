@@ -21,19 +21,17 @@ function SearchContent() {
   const [allProducts, setAllProducts] = useState<Product[]>([])
 
   useEffect(() => {
-    api.get('/products/products/')
-      .then(res => setAllProducts(res.data))
+    api.get(`/products/products/?q=${encodeURIComponent(queryParam)}`)
+      .then(res => {
+        const data = res.data.results || res.data;
+        setAllProducts(Array.isArray(data) ? data : []);
+      })
       .catch(console.error)
-  }, [])
+  }, [queryParam])
 
   // Filter and sort logic
   useEffect(() => {
-    let result = allProducts
-
-    // 1. Filter by search query
-    if (queryParam) {
-      result = result.filter(p => p.title.includes(queryParam))
-    }
+    let result = [...allProducts]
 
     // 2. Filter by discount
     if (filterMode === "discounted") {
@@ -56,7 +54,7 @@ function SearchContent() {
     })
 
     setFilteredProducts(result)
-  }, [queryParam, filterMode, sortMode])
+  }, [allProducts, filterMode, sortMode])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()

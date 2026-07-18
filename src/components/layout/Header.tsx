@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Search, ShoppingBag, User, Menu, LayoutGrid, LogOut, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import api from "@/lib/api"
 import { useCategories } from "@/hooks/useCategories"
 
@@ -14,6 +14,9 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
 
   const [searchQuery, setSearchQuery] = useState("")
+  const [liveResults, setLiveResults] = useState<any[]>([])
+  const [showLiveResults, setShowLiveResults] = useState(false)
+  const pathname = usePathname()
   const [cartCount, setCartCount] = useState(0)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState<{ full_name?: string; role?: string } | null>(null)
@@ -83,6 +86,31 @@ export function Header() {
       window.removeEventListener("user-updated", handleUpdate)
     }
   }, [])
+
+  // Clear search query on pathname change
+  React.useEffect(() => {
+    setSearchQuery("")
+    setShowLiveResults(false)
+  }, [pathname])
+
+  // Debounced search for live results
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery.trim() && searchQuery.trim().length >= 2) {
+        api.get(`/products/products/?q=${encodeURIComponent(searchQuery.trim())}`)
+          .then(res => {
+            const data = res.data.results || res.data;
+            setLiveResults(Array.isArray(data) ? data.slice(0, 5) : [])
+            setShowLiveResults(true)
+          })
+          .catch(() => setLiveResults([]))
+      } else {
+        setLiveResults([])
+        setShowLiveResults(false)
+      }
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -235,19 +263,53 @@ export function Header() {
 
           {/* Middle Section: Search Bar (Full width on mobile, flexible on desktop) */}
           <div className="flex-1 w-full md:max-w-3xl md:mx-6">
-            <form onSubmit={handleSearch} className="relative w-full group flex items-center">
-              <Search
-                strokeWidth={1.5}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-[20px] h-[20px] md:w-[22px] md:h-[22px] text-muted-foreground group-focus-within:text-primary transition-colors"
-              />
-              <Input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="جست‌وجو در بین بیش از ۱۰,۰۰۰ محصول..."
-                className="w-full pr-11 md:pr-[46px] pl-4 md:pl-6 h-12 md:h-[48px] rounded-full border-none md:border-solid border-input bg-secondary/60 md:bg-background focus-visible:ring-1 focus-visible:ring-primary shadow-none text-[13px] md:text-[13.5px] font-medium placeholder:text-muted-foreground/70"
-              />
-            </form>
+            <div className="relative w-full group">
+              <form onSubmit={handleSearch} className="relative flex items-center">
+                <Search
+                  strokeWidth={1.5}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-[20px] h-[20px] md:w-[22px] md:h-[22px] text-muted-foreground group-focus-within:text-primary transition-colors"
+                />
+                <Input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => { if (liveResults.length > 0) setShowLiveResults(true) }}
+                  onBlur={() => { setTimeout(() => setShowLiveResults(false), 200) }}
+                  placeholder="جست‌وجو در بین بیش از ۱۰,۰۰۰ محصول..."
+                  className="w-full pr-11 md:pr-[46px] pl-4 md:pl-6 h-12 md:h-[48px] rounded-full border-none md:border-solid border-input bg-secondary/60 md:bg-background focus-visible:ring-1 focus-visible:ring-primary shadow-none text-[13px] md:text-[13.5px] font-medium placeholder:text-muted-foreground/70"
+                />
+              </form>
+              
+              {/* Live search results dropdown */}
+              {showLiveResults && liveResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-background border rounded-2xl shadow-xl z-50 overflow-hidden">
+                  {liveResults.map(product => (
+                    <Link 
+                      key={product.id} 
+                      href={`/products/${product.slug}`} 
+                      className="flex items-center gap-3 p-3 hover:bg-secondary/50 transition-colors border-b last:border-0"
+                    >
+                      <div className="w-10 h-10 bg-secondary rounded-lg overflow-hidden shrink-0">
+                         {product.image && <img src={product.image} alt={product.title} className="w-full h-full object-cover" />}
+                      </div>
+                      <div className="flex flex-col flex-1">
+                        <span className="text-sm font-bold truncate text-foreground">{product.title}</span>
+                        {product.vendor?.name && <span className="text-[11px] text-muted-foreground">{product.vendor.name}</span>}
+                      </div>
+                    </Link>
+                  ))}
+                  <div className="p-2 text-center bg-secondary/30">
+                    <button 
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`); setShowLiveResults(false); }}
+                      className="text-xs text-primary font-bold hover:underline"
+                    >
+                      مشاهده همه نتایج
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Desktop Left Section: Actions (Hidden on Mobile) */}
