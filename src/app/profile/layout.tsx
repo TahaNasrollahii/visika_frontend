@@ -70,7 +70,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
 
     setUploading(true)
     try {
-      const res = await api.patch('/users/info', formData)
+      const res = await api.patch('/users/info/', formData)
       setUser(res.data)
       window.dispatchEvent(new Event("user-updated"))
     } catch (err) {
