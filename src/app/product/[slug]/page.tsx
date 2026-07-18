@@ -33,6 +33,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ slug:
       })
   }, [resolvedParams.slug])
 
+  useEffect(() => {
+    if (!loading) {
+      window.scrollTo(0, 0)
+    }
+  }, [loading])
+
   const checkCart = async () => {
     try {
       const res = await api.get('/orders/cart/')

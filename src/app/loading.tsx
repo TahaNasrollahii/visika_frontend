@@ -3,8 +3,10 @@ import { ShoppingBag } from "lucide-react"
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background/90 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="relative flex flex-col items-center">
+    <>
+      <div className="min-h-[100vh]" />
+      <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background/90 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="relative flex flex-col items-center">
         {/* Animated Rings */}
         <div className="absolute inset-0 -m-8 border-[3px] border-primary/20 rounded-full animate-[spin_3s_linear_infinite]" />
         <div className="absolute inset-0 -m-4 border-[3px] border-t-primary border-r-primary border-b-transparent border-l-transparent rounded-full animate-[spin_1.5s_linear_infinite]" />
@@ -25,5 +27,6 @@ export default function Loading() {
         </p>
       </div>
     </div>
+    </>
   )
 }
