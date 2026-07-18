@@ -12,6 +12,11 @@ export function cn(...inputs: ClassValue[]) {
 export function mediaUrl(url: string | null | undefined): string {
   if (!url) return 'https://placehold.co/600x400/eeeeee/999999.png?text=No+Image'
   
+  // Enforce HTTPS for Cloudinary to prevent Mixed Content & Next.js Image errors
+  if (url.includes('res.cloudinary.com') && url.startsWith('http://')) {
+    url = url.replace('http://', 'https://')
+  }
+  
   // Use the env variable or fallback to localhost in dev, live host in prod
   const isProd = process.env.NODE_ENV === 'production'
   const defaultApiUrl = isProd ? 'https://visika-back.vercel.app' : 'http://127.0.0.1:8000'
