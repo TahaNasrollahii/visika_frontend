@@ -1,4 +1,5 @@
 import React from "react"
+import Image from "next/image"
 import { ShoppingBag } from "lucide-react"
 
 export default function Loading() {
@@ -12,8 +13,8 @@ export default function Loading() {
         <div className="absolute inset-0 -m-4 border-[3px] border-t-primary border-r-primary border-b-transparent border-l-transparent rounded-full animate-[spin_1.5s_linear_infinite]" />
         
         {/* Logo Container */}
-        <div className="w-20 h-20 bg-gradient-to-tr from-primary to-blue-500 rounded-full flex items-center justify-center shadow-xl shadow-primary/30 relative z-10 animate-bounce">
-          <ShoppingBag className="w-10 h-10 text-white" />
+        <div className="relative w-24 h-24 bg-background rounded-3xl flex items-center justify-center shadow-xl shadow-primary/30 z-10 animate-bounce overflow-hidden">
+          <Image src="/logo.png" alt="در حال بارگذاری..." fill className="object-contain p-1" sizes="96px" priority />
         </div>
       </div>
       

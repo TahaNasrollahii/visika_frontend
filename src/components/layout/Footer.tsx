@@ -1,5 +1,6 @@
 import React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Camera, Send, Phone, Mail, MapPin } from "lucide-react"
 
 export function Footer() {
@@ -12,8 +13,8 @@ export function Footer() {
           {/* Brand & Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-6">
-              <div className="bg-primary text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xl shadow-sm">
-                V
+              <div className="relative w-10 h-10 overflow-hidden">
+                <Image src="/logo.png" alt="ویزیکا" fill className="object-contain" sizes="40px" />
               </div>
               <span className="font-bold text-2xl tracking-tight text-primary">
                 ویزیکا

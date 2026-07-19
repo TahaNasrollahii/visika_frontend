@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Search, ShoppingBag, User, Menu, LayoutGrid, LogOut, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -143,8 +144,8 @@ export function Header() {
                 setShowLiveResults(false)
               }}
             >
-              <div className="w-10 h-10 md:w-[42px] md:h-[42px] bg-primary rounded-full flex items-center justify-center shadow-sm">
-                <ShoppingBag className="w-5 h-5 text-primary-foreground" />
+              <div className="relative w-10 h-10 md:w-[42px] md:h-[42px] flex items-center justify-center overflow-hidden">
+                <Image src="/logo.png" alt="ویزیکا" fill className="object-contain" priority sizes="(max-width: 768px) 40px, 42px" />
               </div>
               <div className="flex flex-col">
                 <span className="font-extrabold text-xl md:text-[22px] tracking-tight text-foreground leading-tight">
