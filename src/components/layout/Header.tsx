@@ -289,7 +289,10 @@ export function Header() {
               
               {/* Live search results dropdown */}
               {showLiveResults && liveResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-background border rounded-2xl shadow-xl z-50 overflow-hidden">
+                <div 
+                  className="absolute top-full left-0 right-0 mt-2 bg-background border rounded-2xl shadow-xl z-50 overflow-hidden"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
                   {liveResults.map(product => (
                     <Link 
                       key={product.id} 

@@ -217,8 +217,9 @@ export default function CheckoutPage() {
       toast.success("سفارش با موفقیت ثبت شد")
       window.dispatchEvent(new Event("cart-updated"))
       router.push(`/success?order_id=${res.data.id}`)
-    } catch (err) {
-      toast.error("خطا در ثبت سفارش")
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.error || "خطا در ثبت سفارش"
+      toast.error(errorMessage)
       setCheckingOut(false)
     }
   }
