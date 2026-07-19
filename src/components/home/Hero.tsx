@@ -2,12 +2,18 @@
 
 import React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 export function Hero() {
   return (
     <section className="container mx-auto px-4 lg:px-8 pt-6">
       <div className="w-full h-[380px] md:h-[420px] lg:h-[480px] rounded-[2.5rem] bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-[length:200%_auto] animate-[gradient-x_8s_linear_infinite] relative overflow-hidden flex items-center justify-center md:justify-start shadow-2xl shadow-blue-500/30">
+
+        {/* Hero Background Image */}
+        <div className="absolute inset-0 z-0 mix-blend-overlay opacity-40">
+          <Image src="/hero.png" alt="Vizika" fill className="object-cover" priority />
+        </div>
 
         {/* Animated Background Elements */}
         <div
