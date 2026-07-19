@@ -17,16 +17,22 @@ export function Hero() {
           className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-[100px] pointer-events-none animate-pulse duration-1000 delay-500"
         />
 
-        {/* Floating Emojis */}
+        {/* Floating Glassmorphic Emoji 1 */}
         <div
-          className="absolute top-[20%] left-[10%] lg:top-[15%] lg:left-[15%] text-5xl lg:text-7xl drop-shadow-2xl animate-float [animation-delay:1s] z-20"
+          className="absolute top-[20%] left-[10%] lg:top-[15%] lg:left-[15%] flex items-center justify-center w-16 h-16 lg:w-24 lg:h-24 bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] rotate-[-6deg] animate-float [animation-delay:1s] z-20 group hover:bg-white/20 transition-colors duration-500"
         >
-          🧀
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-300/30 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -inset-4 bg-yellow-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
+          <span className="text-4xl lg:text-6xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)] transform group-hover:scale-110 group-hover:-rotate-12 transition-all duration-500 z-10 relative">🧀</span>
         </div>
+        
+        {/* Floating Glassmorphic Emoji 2 */}
         <div
-          className="absolute bottom-[30%] left-[5%] lg:bottom-[25%] lg:left-[20%] text-5xl lg:text-7xl drop-shadow-2xl animate-float [animation-delay:2.5s] z-20"
+          className="absolute bottom-[30%] left-[5%] lg:bottom-[25%] lg:left-[20%] flex items-center justify-center w-14 h-14 lg:w-20 lg:h-20 bg-white/10 backdrop-blur-xl border border-white/30 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.12)] rotate-[8deg] animate-float [animation-delay:2.5s] z-20 group hover:bg-white/20 transition-colors duration-500"
         >
-          🥛
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/40 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -inset-4 bg-white/30 blur-xl rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
+          <span className="text-3xl lg:text-5xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.15)] transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 z-10 relative">🥛</span>
         </div>
 
 
