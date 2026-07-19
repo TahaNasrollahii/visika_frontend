@@ -95,7 +95,7 @@ export default async function Home() {
         </div>
         <div className="flex overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-4 lg:grid-cols-6 gap-4 md:overflow-visible md:pb-0">
           {bestSellers.map((product: any) => (
-            <div key={product.id} className="w-[140px] shrink-0 snap-center md:w-auto">
+            <div key={product.id} className="w-[160px] shrink-0 snap-center md:w-auto">
               <ProductCard product={product} />
             </div>
           ))}
