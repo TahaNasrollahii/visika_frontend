@@ -296,7 +296,7 @@ export function Header() {
                   {liveResults.map(product => (
                     <Link 
                       key={product.id} 
-                      href={`/products/${product.slug}`} 
+                      href={`/product/${product.id}`} 
                       className="flex items-center gap-3 p-3 hover:bg-secondary/50 transition-colors border-b last:border-0"
                     >
                       <div className="w-10 h-10 bg-secondary rounded-lg overflow-hidden shrink-0">
