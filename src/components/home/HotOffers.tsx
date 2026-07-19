@@ -17,23 +17,7 @@ export function HotOffers({ hotOffers }: { hotOffers: any[] }) {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   useEffect(() => {
-    let animationFrameId: number;
-    let accumulated = 0;
-    const autoScroll = () => {
-      if (scrollRef.current && !isHoveredRef.current && !isDraggingRef.current) {
-        accumulated += 0.5; 
-        if (Math.abs(accumulated) >= 1) {
-           scrollRef.current.scrollBy({ left: -1 }); 
-           accumulated = 0;
-        }
-      }
-      animationFrameId = requestAnimationFrame(autoScroll);
-    };
-    
-    animationFrameId = requestAnimationFrame(autoScroll);
-    return () => cancelAnimationFrame(animationFrameId);
-  // Empty deps: start once, read live values from refs — no restarts.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Auto-scroll removed for better UX. Users can manually swipe or drag.
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {

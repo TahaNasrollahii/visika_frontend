@@ -67,10 +67,10 @@ export function Hero() {
         <div
           className="hidden lg:block absolute top-1/3 left-[45%] text-5xl opacity-60 blur-[1px] animate-float [animation-delay:2s]"
         >
-          🥑
+          🧀
         </div>
         <div
-          className="hidden lg:block absolute bottom-[20%] left-[85%] text-4xl opacity-40 blur-[1px] animate-float [animation-delay:3.5s] z-0"
+          className="hidden lg:block absolute bottom-[10%] left-[5%] text-4xl opacity-40 blur-[1px] animate-float [animation-delay:3.5s] z-0"
         >
           🍅
         </div>

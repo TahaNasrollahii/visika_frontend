@@ -56,7 +56,7 @@ export default async function Home() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold tracking-tight">دسته‌بندی‌ها</h2>
         </div>
-        <div className="flex overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] gap-4">
+        <div className="flex w-full overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] gap-4 md:justify-between">
           {categories.map((cat: any) => (
             <Link
               key={cat.id}
