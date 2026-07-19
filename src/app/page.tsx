@@ -56,12 +56,12 @@ export default async function Home() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold tracking-tight">دسته‌بندی‌ها</h2>
         </div>
-        <div className="flex overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-6 lg:grid-cols-8 gap-4 md:overflow-visible md:pb-0">
+        <div className="flex overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] gap-4">
           {categories.map((cat: any) => (
             <Link
               key={cat.id}
               href={`/categories/${cat.slug}`}
-              className="group flex flex-col items-center gap-3 text-center min-w-[72px] shrink-0 snap-center md:min-w-0"
+              className="group flex flex-col items-center gap-3 text-center min-w-[72px] md:min-w-[88px] shrink-0 snap-center"
             >
               <div className={`relative w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center text-3xl shadow-sm transition-transform group-hover:-translate-y-1 group-hover:shadow-md ${cat.color} overflow-hidden`}>
                 {cat.image ? (
