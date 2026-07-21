@@ -12,13 +12,10 @@ export function Footer() {
           
           {/* Brand & Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-0 md:gap-1 mb-6 -mt-4 md:-mt-8 -mr-4 md:-mr-8">
-              <div className="relative w-24 h-24 md:w-32 md:h-32 shrink-0">
-                <Image src="/newlogo.png" alt="ویزیکا" fill className="object-contain scale-[1.3] md:scale-[1.5]" unoptimized />
+            <div className="flex items-center mb-6">
+              <div className="relative w-20 h-20 md:w-24 md:h-24 shrink-0">
+                <Image src="/newlogo.png" alt="ویزیکا" fill className="object-contain" unoptimized />
               </div>
-              <span className="font-bold text-2xl tracking-tight text-primary -mr-2 md:-mr-6">
-                ویزیکا
-              </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               ویزیکا، سوپرمارکت آنلاین شما برای خریدی آسان، سریع و مطمئن. ما بهترین و تازه‌ترین محصولات را با کمترین زمان به دست شما می‌رسانیم تا تجربه‌ای متفاوت از خرید روزانه داشته باشید.
