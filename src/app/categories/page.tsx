@@ -27,8 +27,12 @@ export default async function CategoriesPage() {
             className="group flex items-center justify-between p-6 bg-secondary/30 hover:bg-secondary rounded-2xl border transition-colors"
           >
             <div className="flex items-center gap-4">
-              <div className={`w-16 h-16 rounded-xl flex items-center justify-center text-3xl shadow-sm ${category.color}`}>
-                {category.icon}
+              <div className={`w-16 h-16 rounded-xl flex items-center justify-center text-3xl shadow-sm overflow-hidden bg-secondary ${category.color || ""}`}>
+                {category.image ? (
+                  <img src={category.image} alt={category.title} className="w-full h-full object-cover" />
+                ) : (
+                  category.icon
+                )}
               </div>
               <div>
                 <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{category.title}</h3>
