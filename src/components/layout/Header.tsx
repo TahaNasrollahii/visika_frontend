@@ -138,7 +138,7 @@ export function Header() {
             {/* Right Section: Logo */}
             <Link 
               href="/" 
-              className="flex items-center gap-2 md:gap-3"
+              className="flex items-center gap-0 md:gap-1"
               onClick={() => {
                 setSearchQuery("")
                 setShowLiveResults(false)
@@ -147,7 +147,7 @@ export function Header() {
               <div className="relative w-20 h-20 md:w-[120px] md:h-[120px] flex items-center justify-center shrink-0">
                 <Image src="/logo.png" alt="ویزیکا" fill className="object-contain scale-[1.3] md:scale-[1.5]" priority unoptimized />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col -mr-2 md:-mr-6">
                 <span className="font-extrabold text-xl md:text-[22px] tracking-tight text-foreground leading-tight">
                   ویزیکا
                 </span>
