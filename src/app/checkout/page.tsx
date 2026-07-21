@@ -29,6 +29,7 @@ export default function CheckoutPage() {
   // Vendor-specific valid delivery dates computed from delivery rules
   const [vendorDeliveryTimes, setVendorDeliveryTimes] = useState<Record<string, string[]>>({})
   const [activeVendorModal, setActiveVendorModal] = useState<string | null>(null)
+  const [showAddressSelectionModal, setShowAddressSelectionModal] = useState(false)
 
   const router = useRouter()
 
@@ -134,9 +135,7 @@ export default function CheckoutPage() {
           const rule = rules[brand] || defaultRule
           const dates = computeDeliveryDates(rule)
           vendorTimes[brand] = dates
-          if (dates.length > 0) {
-            initialTimes[brand] = dates[0]
-          }
+          // removed auto-select of first date as requested
         })
         setVendorDeliveryTimes(vendorTimes)
         setSelectedDeliveryTimes(initialTimes)
@@ -207,9 +206,16 @@ export default function CheckoutPage() {
   const handleCheckout = async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!defaultAddress) {
-      toast.error("لطفا آدرس خود را ثبت کنید")
+      toast.error("لطفا آدرس خود را ثبت یا انتخاب کنید")
       return
     }
+    
+    const missingTimes = brands.some(brand => !selectedDeliveryTimes[brand])
+    if (missingTimes) {
+      toast.error("لطفا زمان تحویل تمام کالاها را انتخاب کنید")
+      return
+    }
+
     setCheckingOut(true)
     try {
       const res = await api.post('/orders/checkout/', {
@@ -235,14 +241,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 lg:px-8 min-h-[calc(100vh-200px)] overflow-hidden">
-      <div
-        className="flex items-center gap-3 mb-8 animate-in fade-in slide-in-from-top-4 duration-500"
-      >
-        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-          <CreditCard className="w-5 h-5" />
-        </div>
-        <h1 className="text-3xl font-black text-foreground tracking-tight">تکمیل سفارش</h1>
-      </div>
 
       <div
         className="flex flex-col lg:flex-row gap-8 lg:gap-10 animate-in fade-in duration-700"
@@ -256,49 +254,74 @@ export default function CheckoutPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
             <div className="relative z-10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-border/50">
-                <h2 className="font-bold text-xl flex items-center gap-3 text-foreground">
-                  <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  آدرس تحویل سفارش
-                </h2>
-                <Button onClick={() => setShowAddressModal(true)} variant="outline" size="sm" className="rounded-xl border-border/60 hover:bg-background shadow-sm flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                  <Plus className="w-4 h-4" />
-                  آدرس جدید
-                </Button>
-              </div>
-              <div className="space-y-4">
-                {addresses.length > 0 ? (
-                  <div className="grid gap-4">
-                    {addresses.map(address => (
-                      <div 
-                        key={address.id} 
-                        onClick={() => setDefaultAddress(address)}
-                        className={`cursor-pointer border-2 rounded-2xl p-4 transition-all ${defaultAddress?.id === address.id ? 'border-primary bg-primary/5' : 'border-border/50 hover:border-primary/40'}`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className={`mt-1 flex items-center justify-center w-5 h-5 rounded-full border-2 shrink-0 ${defaultAddress?.id === address.id ? 'border-primary' : 'border-muted-foreground'}`}>
-                            {defaultAddress?.id === address.id && <div className="w-2.5 h-2.5 bg-primary rounded-full" />}
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-bold">{address.title}</h3>
-                              {address.is_default && <span className="text-[10px] bg-secondary px-2 py-0.5 rounded-full text-muted-foreground">پیش‌فرض</span>}
+              {/* Desktop View */}
+              <div className="hidden md:block">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-border/50">
+                  <h2 className="font-bold text-xl flex items-center gap-3 text-foreground">
+                    <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    آدرس تحویل سفارش
+                  </h2>
+                  <Button onClick={() => setShowAddressModal(true)} variant="outline" size="sm" className="rounded-xl border-border/60 hover:bg-background shadow-sm flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+                    <Plus className="w-4 h-4" />
+                    آدرس جدید
+                  </Button>
+                </div>
+                <div className="space-y-4">
+                  {addresses.length > 0 ? (
+                    <div className="grid gap-4">
+                      {addresses.map(address => (
+                        <div 
+                          key={address.id} 
+                          onClick={() => setDefaultAddress(address)}
+                          className={`cursor-pointer border-2 rounded-2xl p-4 transition-all ${defaultAddress?.id === address.id ? 'border-primary bg-primary/5' : 'border-border/50 hover:border-primary/40'}`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`mt-1 flex items-center justify-center w-5 h-5 rounded-full border-2 shrink-0 ${defaultAddress?.id === address.id ? 'border-primary' : 'border-muted-foreground'}`}>
+                              {defaultAddress?.id === address.id && <div className="w-2.5 h-2.5 bg-primary rounded-full" />}
                             </div>
-                            <p className="text-sm text-muted-foreground leading-relaxed">{address.detail}</p>
-                            {address.postal_code && <p className="text-xs text-muted-foreground mt-2">کد پستی: {address.postal_code}</p>}
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <h3 className="font-bold">{address.title}</h3>
+                                {address.is_default && <span className="text-[10px] bg-secondary px-2 py-0.5 rounded-full text-muted-foreground">پیش‌فرض</span>}
+                              </div>
+                              <p className="text-sm text-muted-foreground leading-relaxed">{address.detail}</p>
+                              {address.postal_code && <p className="text-xs text-muted-foreground mt-2">کد پستی: {address.postal_code}</p>}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl flex items-center justify-between">
-                    <span className="font-bold">آدرسی ثبت نشده است.</span>
-                    <Button onClick={() => setShowAddressModal(true)} size="sm" className="bg-rose-500 hover:bg-rose-600 text-white rounded-lg">ثبت آدرس</Button>
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl flex items-center justify-between">
+                      <span className="font-bold">آدرسی ثبت نشده است.</span>
+                      <Button onClick={() => setShowAddressModal(true)} size="sm" className="bg-rose-500 hover:bg-rose-600 text-white rounded-lg">ثبت آدرس</Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Mobile View */}
+              <div className="md:hidden flex flex-col gap-4">
+                 <div className="flex items-center gap-3 mb-2">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    <h2 className="font-bold text-lg">آدرس تحویل سفارش</h2>
+                 </div>
+                 <div className="flex justify-between items-center bg-background rounded-2xl p-4 border border-border/40 shadow-sm">
+                   <div className="flex flex-col gap-1 overflow-hidden ml-2">
+                     <span className="text-sm font-bold text-foreground truncate">{defaultAddress ? defaultAddress.title : "آدرسی انتخاب نشده"}</span>
+                     <span className="text-xs text-muted-foreground truncate">{defaultAddress ? defaultAddress.detail : "برای انتخاب آدرس دکمه مقابل را بزنید"}</span>
+                   </div>
+                   <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-primary border-primary rounded-full px-5 text-xs h-9 font-bold shrink-0"
+                      onClick={() => setShowAddressSelectionModal(true)}
+                   >
+                     انتخاب آدرس
+                   </Button>
+                 </div>
               </div>
             </div>
           </div>
@@ -615,6 +638,61 @@ export default function CheckoutPage() {
                   })
                 )}
               </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Address Selection Bottom Sheet Modal (Mobile) */}
+      {showAddressSelectionModal && (
+        <>
+          <div 
+            className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm md:hidden"
+            onClick={() => setShowAddressSelectionModal(false)}
+          />
+          <div className="fixed bottom-0 left-0 right-0 z-[70] bg-card w-full rounded-t-[2rem] border-t shadow-2xl overflow-hidden animate-in slide-in-from-bottom-full duration-300 md:hidden flex flex-col max-h-[80vh]">
+            <div className="flex justify-center p-3 cursor-pointer shrink-0" onClick={() => setShowAddressSelectionModal(false)}>
+              <div className="w-12 h-1.5 bg-muted rounded-full"></div>
+            </div>
+            <div className="px-6 pb-6 pt-2 flex items-center justify-between shrink-0 border-b">
+              <h2 className="text-lg font-black">انتخاب آدرس</h2>
+              <Button onClick={() => {setShowAddressSelectionModal(false); setShowAddressModal(true);}} variant="outline" size="sm" className="rounded-xl border-border/60 hover:bg-background text-primary">
+                <Plus className="w-4 h-4 ml-1" />
+                آدرس جدید
+              </Button>
+            </div>
+            <div className="px-6 py-4 overflow-y-auto w-full">
+              {addresses.length > 0 ? (
+                <div className="flex flex-col gap-3 pb-8">
+                  {addresses.map(address => (
+                    <div 
+                      key={address.id} 
+                      onClick={() => {
+                        setDefaultAddress(address);
+                        setShowAddressSelectionModal(false);
+                      }}
+                      className={`cursor-pointer border rounded-3xl p-4 transition-all ${defaultAddress?.id === address.id ? 'border-primary bg-primary/5 shadow-sm' : 'border-border/60 bg-background'}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`mt-1 flex items-center justify-center w-5 h-5 rounded-full border shrink-0 ${defaultAddress?.id === address.id ? 'border-primary' : 'border-muted-foreground'}`}>
+                          {defaultAddress?.id === address.id && <div className="w-2.5 h-2.5 bg-primary rounded-full" />}
+                        </div>
+                        <div className="overflow-hidden">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className={`font-bold text-sm ${defaultAddress?.id === address.id ? 'text-primary' : 'text-foreground'}`}>{address.title}</h3>
+                            {address.is_default && <span className="text-[10px] bg-secondary px-2 py-0.5 rounded-full text-muted-foreground">پیش‌فرض</span>}
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{address.detail}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-8 text-center">
+                  <span className="font-bold text-muted-foreground text-sm">آدرسی ثبت نشده است.</span>
+                </div>
+              )}
             </div>
           </div>
         </>

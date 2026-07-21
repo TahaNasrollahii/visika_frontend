@@ -77,15 +77,7 @@ export default function CartPage() {
         
         {/* Cart Items List */}
         <div className="flex-1 space-y-4">
-          <div className="bg-card border rounded-3xl p-6 flex items-center justify-between shadow-sm">
-            <div className="flex items-center gap-3">
-              <ShoppingCart className="text-primary w-6 h-6" />
-              <div>
-                <h2 className="font-bold">سبد خرید ویزیکا</h2>
-                <p className="text-sm text-muted-foreground mt-1">{cartItems.length} کالا</p>
-              </div>
-            </div>
-          </div>
+
 
           <div className="bg-card border rounded-3xl shadow-sm overflow-hidden divide-y">
             {loading ? (
