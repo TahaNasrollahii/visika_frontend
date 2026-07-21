@@ -5,15 +5,15 @@ import { Camera, Send, Phone, Mail, MapPin } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-secondary/30 border-t mt-16 pt-16 pb-8 md:pb-16 mb-16 md:mb-0">
+    <footer className="bg-secondary/30 border-t mt-16 pt-8 md:pt-16 pb-8 md:pb-16 mb-16 md:mb-0">
       <div className="container mx-auto px-4 lg:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
           
           {/* Brand & Info */}
           <div className="space-y-4">
-            <div className="flex mb-4">
-              <div className="relative w-32 h-32 md:w-80 md:h-28 shrink-0">
+            <div className="flex mb-0 md:mb-4 -mt-2 md:-mt-0">
+              <div className="relative w-24 h-24 md:w-80 md:h-28 shrink-0">
                 <Image src="/newlogo.png" alt="ویزیکا" fill className="hidden md:block object-contain object-right" unoptimized />
                 <Image src="/mobile_logo.png" alt="ویزیکا" fill className="block md:hidden object-contain object-right" unoptimized />
               </div>
